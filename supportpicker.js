@@ -71,23 +71,25 @@ function getBestSupport(enemySupport, enemyAdc, alliedAdc) {
   var bestScore = 0;
   var bestSupp = "";
   for(support in supports) {
-    var currentSupp = supports[support];
-    var score = 0;
-    if(currentSupp[0].indexOf(enemySupport) > -1) {
-      score++;
-    }
-    if(currentSupp[0].indexOf(enemyAdc) > -1) {
-      score++;
-    }
-    if(currentSupp[1].indexOf(alliedAdc) > -1) {
-      score ++;
-    }
-    if(support == "Thresh") {
-      score += 0.5;
-    }
-    if(score > bestScore) {
-      bestScore = score;
-      bestSupp = support;
+    if(support != enemySupport) {
+      var currentSupp = supports[support];
+      var score = 0;
+      if(currentSupp[0].indexOf(enemySupport) > -1) {
+        score++;
+      }
+      if(currentSupp[0].indexOf(enemyAdc) > -1) {
+        score++;
+      }
+      if(currentSupp[1].indexOf(alliedAdc) > -1) {
+        score ++;
+      }
+      if(support == "Thresh") {
+        score += 0.5;
+      }
+      if(score > bestScore) {
+        bestScore = score;
+        bestSupp = support;
+      }
     }
   }
   return bestSupp;
