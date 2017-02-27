@@ -69,7 +69,7 @@ var supports = {
 
 function getBestSupport(enemySupport, enemyAdc, alliedAdc) {
   var bestScore = 0;
-  var bestSupp = "";
+  var bestSupp = [];
   for(support in supports) {
     if(support != enemySupport) {
       var currentSupp = supports[support];
@@ -86,6 +86,9 @@ function getBestSupport(enemySupport, enemyAdc, alliedAdc) {
       if(score > bestScore) {
         bestScore = score;
         bestSupp = support;
+        if(score > 2) {
+          bestSupp.push(support);
+        }
       }
     }
   }
