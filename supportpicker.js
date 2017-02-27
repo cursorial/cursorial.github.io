@@ -96,8 +96,11 @@ function formChanged() {
 
   var bestSupport = getBestSupport(enemySupport, enemyAdc, alliedAdc);
   var outstring = "";
+  bestSupport.sort(function(a, b) {
+    return a.score > b.score;
+  });
   for(var i = 0; i < bestSupport.length; i++) {
-    outstring += bestSupport[i].name + ':' + bestSupport[i].score + '\n';
+    outstring += "<p>" + bestSupport[i].name + ' : ' + bestSupport[i].score + '</p>';
   }
   document.getElementById('result').innerHTML = outstring;
 }
