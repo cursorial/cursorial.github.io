@@ -97,7 +97,7 @@ function formChanged() {
   var bestSupport = getBestSupport(enemySupport, enemyAdc, alliedAdc);
   var outstring = "";
   for(var i = 0; i < bestSupport.length; i++) {
-    outstring += bestSupport[i];
+    outstring += bestSupport[i].name + ':' + bestSupport[i].score + '\n';
   }
   document.getElementById('result').innerHTML = outstring;
 }
