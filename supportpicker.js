@@ -83,9 +83,6 @@ function getBestSupport(enemySupport, enemyAdc, alliedAdc) {
       if(currentSupp[1].indexOf(alliedAdc) > -1) {
         score ++;
       }
-      if(support == "Thresh") {
-        score += 0.5;
-      }
       if(score > bestScore) {
         bestScore = score;
         bestSupp = support;
