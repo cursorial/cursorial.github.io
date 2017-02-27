@@ -83,9 +83,7 @@ function getBestSupport(enemySupport, enemyAdc, alliedAdc) {
       if(currentSupp[1].indexOf(alliedAdc) > -1) {
         score ++;
       }
-      if(score > bestScore) {
-        bestSupp.push({support: score});
-      }
+      bestSupp.push({support: score});
     }
   }
   return bestSupp;
