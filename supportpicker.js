@@ -95,5 +95,9 @@ function formChanged() {
   var alliedAdc = document.getElementById('alliedAdc').value;
 
   var bestSupport = getBestSupport(enemySupport, enemyAdc, alliedAdc);
-  document.getElementById('result').innerHTML = bestSupport;
+  var outstring = "";
+  for(var i = 0; i < bestSupport.length; i++) {
+    outstring += bestSupport[i];
+  }
+  document.getElementById('result').innerHTML = outstring;
 }
