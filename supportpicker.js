@@ -69,25 +69,21 @@ var supports = {
 
 function getBestSupport(enemySupport, enemyAdc, alliedAdc) {
   var bestScore = 0;
-  var bestSupp = "";
+  var bestSupp = [];
   for(support in supports) {
-    var currentSupp = supports[support];
-    var score = 0;
-    if(currentSupp[0].indexOf(enemySupport) > -1) {
-      score++;
-    }
-    if(currentSupp[0].indexOf(enemyAdc) > -1) {
-      score++;
-    }
-    if(currentSupp[1].indexOf(alliedAdc) > -1) {
-      score ++;
-    }
-    if(support == "Thresh") {
-      score += 0.5;
-    }
-    if(score > bestScore) {
-      bestScore = score;
-      bestSupp = support;
+    if(support != enemySupport) {
+      var currentSupp = supports[support];
+      var score = 0;
+      if(currentSupp[0].indexOf(enemySupport) > -1) {
+        score++;
+      }
+      if(currentSupp[0].indexOf(enemyAdc) > -1) {
+        score++;
+      }
+      if(currentSupp[1].indexOf(alliedAdc) > -1) {
+        score ++;
+      }
+      bestSupp.push({name: support, score: score});
     }
   }
   return bestSupp;
@@ -99,5 +95,13 @@ function formChanged() {
   var alliedAdc = document.getElementById('alliedAdc').value;
 
   var bestSupport = getBestSupport(enemySupport, enemyAdc, alliedAdc);
-  document.getElementById('result').innerHTML = bestSupport;
+  var outstring = "";
+  bestSupport.sort(function(a, b) {
+    return a.score > b.score;
+  });
+  bestSupport.reverse();
+  for(var i = 0; i < 3; i++) {
+    outstring += "<p>" + bestSupport[i].name + ' : ' + bestSupport[i].score + '</p>';
+  }
+  document.getElementById('result').innerHTML = outstring;
 }
