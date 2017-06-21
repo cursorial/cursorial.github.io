@@ -37,7 +37,7 @@ function draw() {
     fill(180);
     text("-You have control of the cell with a blue border.", 400, 40);
     fill(220);
-    text("-If you hover over an adjacent cell that is green\nyou can click it to take it over.", 400, 60);
+    text("-If you hover over an adjacent cell that is green\nyou can move population to it to take it over.", 400, 60);
     fill(180);
     text("-If the cell is red you cannot take it over.", 400, 100);
     fill(220);
@@ -48,6 +48,8 @@ function draw() {
     text("-Beware of other cells with higher numbers,\nthey may take your territory if your population is too low.", 400, 180)
     fill(180);
     text("-Be careful when you expand, your population will drop\nsignificantly in order to take new territories.", 400, 220);
+    fill(220, 100, 100);
+    text("-Move population by clicking on the cell you want to\nmove from, and then the cell that you want to move to.", 400, 260)
     fill(200, 200, 120);
     text("Keyboard shortcuts\nSpace - End Turn", 400, 300);
     text("You can start over by refreshing the page", 400, 340);
