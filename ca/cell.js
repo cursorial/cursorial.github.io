@@ -1,6 +1,9 @@
 function CellData() {
     this.playerOwned = false;
     this.population = Math.random() * 250;
+    if(this.playerOwned) {
+        this.population = 170;
+    }
 }
 
 function Cell(x, y, size, gridX, gridY) {
@@ -37,7 +40,7 @@ function Cell(x, y, size, gridX, gridY) {
     this.draw = function() {
         smooth();
         fill(255, 255, 255, this.data.population);
-        strokeWeight(2);
+        strokeWeight(10);
         if(this.mouseOver()) {
             if(this.data.playerOwned) {
                 fill(120, 120, 255, this.population);
@@ -94,8 +97,8 @@ function Cell(x, y, size, gridX, gridY) {
         if(neighbours != null) {
             for(var neighbour of neighbours) {
                 if(neighbour != null) {
-                    if(neighbour.data.population < this.data.population / 4) {
-                        this.data.population = this.data.population - neighbour.data.population;
+                    if(neighbour.data.population < this.data.population / 3) {
+                        this.data.population = this.data.population - (neighbour.data.population * Math.random());
                         neighbour.data.population = this.data.population / 2;
                         neighbour.data.playerOwned = false;
                     }
@@ -104,7 +107,7 @@ function Cell(x, y, size, gridX, gridY) {
             }
         }
         if(this.data.population < 255 && this.data.population > 0) {
-            this.data.population *= 1 + ((Math.random() * 0.1) - 0.05);
+            this.data.population *= 1 + ((Math.random() * 0.2) - 0.1);
         }
         if(this.data.population > 255) {
             this.data.population = 253;
@@ -143,7 +146,7 @@ function Cell(x, y, size, gridX, gridY) {
                     if(this.neighbours().includes(p)) {
                         if(p.data.population > this.data.population) {
                             this.data.playerOwned = true;
-                            p.data.population = p.data.population - this.data.population;
+                            p.data.population = p.data.population - (this.data.population * Math.random());
                             this.data.population = p.data.population / 2;
                             p.data.population = p.data.population / 2;
                         }

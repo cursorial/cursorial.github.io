@@ -64,6 +64,7 @@ function mouseClicked() {
     for(var x = 0; x < grid.data.length; x++) {
         for(var y = 0; y < grid.data[x].length; y++) {
             grid.data[x][y].clicked();
+            grid.data[x][y].update();
         }
     }
 }
