@@ -104,7 +104,7 @@ function Cell(x, y, size, gridX, gridY) {
             }
         }
         if(this.data.population < 255 && this.data.population > 0) {
-            this.data.population *= 1 + ((Math.random() * 0.2) - 0.1);
+            this.data.population *= 1 + ((Math.random() * 0.2) - 0.09);
         }
         if(this.data.population > 255) {
             this.data.population = 253;
