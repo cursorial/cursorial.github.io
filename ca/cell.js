@@ -138,27 +138,36 @@ function Cell(x, y, size, gridX, gridY) {
 
     this.clicked = function() {
         if(this.mouseOver()) {
-            if(!this.data.playerOwned) {
-                for(var p of this.playerOwnedCells()) {
-                    if(this.neighbours().includes(p)) {
-                        if(p.data.population > this.data.population) {
-                            this.data.playerOwned = true;
-                            p.data.population = p.data.population - (this.data.population * Math.random());
-                            this.data.population = p.data.population / 2;
-                            p.data.population = p.data.population / 2;
+            if(firstCellClicked == null) {
+                firstCellClicked = this;
+            } else if(secondCellClicked == null) {
+                secondCellClicked = this;
+            }
+            
+            if(firstCellClicked != null && secondCellClicked != null) {
+                if(firstCellClicked == secondCellClicked) {
+                    firstCellClicked = null;
+                    secondCellClicked = null;
+                } else if(firstCellClicked.neighbours().includes(secondCellClicked)) {
+                    if(firstCellClicked != null && secondCellClicked != null) {
+                        if(firstCellClicked.data.playerOwned && secondCellClicked.data.playerOwned) {
+                            var average = (firstCellClicked.data.population + secondCellClicked.data.population) / 2;
+                            firstCellClicked.data.population = average;
+                            secondCellClicked.data.population = average;
+                        } else if(firstCellClicked.data.playerOwned && !secondCellClicked.data.playerOwned) {
+                            firstCellClicked.data.population -= secondCellClicked.data.population * Math.random();
+                            firstCellClicked.data.population /= 2;
+                            secondCellClicked.data.population = firstCellClicked.data.population;
+                            secondCellClicked.data.playerOwned = true;
+                        } else {
+                            alert("Invalid Move! You can only control your own cells.");
                         }
                     }
+                } else {
+                    alert("Invalid Move! You can only move between neighbouring cells.");
                 }
-            } else {
-                for(var p of this.playerOwnedCells()) {
-                    if(this.neighbours().includes(p)) {
-                        if(p.data.population > this.data.population) {
-                            var average = (p.data.population + this.data.population) / 2;
-                            p.data.population = average;
-                            this.data.population = average;
-                        }
-                    }
-                }
+                firstCellClicked = null;
+                secondCellClicked = null;
             }
         }
     }
