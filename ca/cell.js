@@ -1,9 +1,6 @@
 function CellData() {
     this.playerOwned = false;
     this.population = Math.random() * 250;
-    if(this.playerOwned) {
-        this.population = 170;
-    }
 }
 
 function Cell(x, y, size, gridX, gridY) {
