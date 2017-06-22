@@ -100,8 +100,8 @@ function draw() {
         text(
             'Cell at: ' + firstCellClicked.gridX + ', ' + firstCellClicked.gridY + ' selected\n' + 
             'Food: ' + Math.round(firstCellClicked.data.food) + '\n' +
-            'Population Growth Rate: ' + firstCellClicked.data.populationGrowthRate + '\n' +
-            'Population Decline Rate: ' + firstCellClicked.data.populationDeclineRate, 430, 50);
+            'Population Growth Rate: ' + firstCellClicked.data.populationGrowthRate.toFixed(2) + '\n' +
+            'Population Decline Rate: ' + firstCellClicked.data.populationDeclineRate.toFixed(2), 430, 50);
             if(firstCellClicked.data.population < firstCellClicked.data.food) {
                 fill(120, 255, 120);
                 text('Population is GROWING', 430, 100);
