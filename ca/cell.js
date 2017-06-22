@@ -157,23 +157,14 @@ function Cell(x, y, size, gridX, gridY) {
                             firstCellClicked.data.population = average;
                             secondCellClicked.data.population = average;
                         } else if(firstCellClicked.data.playerOwned && !secondCellClicked.data.playerOwned) {
-<<<<<<< HEAD
                             if(firstCellClicked.data.population - secondCellClicked.data.population < 0) {
                                 firstCellClicked.data.population /= 2;
                                 secondCellClicked.data.population -= firstCellClicked.data.population;
                             } else {
-=======
-                            if(firstCellClicked.data.population > secondCellClicked.data.population) {
->>>>>>> b35af8de11f1687deba2c81dbc0bba43ba9220ab
                                 firstCellClicked.data.population -= secondCellClicked.data.population * Math.random();
                                 firstCellClicked.data.population /= 2;
                                 secondCellClicked.data.population = firstCellClicked.data.population;
                                 secondCellClicked.data.playerOwned = true;
-<<<<<<< HEAD
-=======
-                            } else {
-                                alert("Invalid Move! You can only take territories that have a lower population than yours.");
->>>>>>> b35af8de11f1687deba2c81dbc0bba43ba9220ab
                             }
                         } else {
                             alert("Invalid Move! You can only control your own cells.");
