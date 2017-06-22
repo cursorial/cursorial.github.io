@@ -28,10 +28,55 @@ function setup() {
     startOverButton.mousePressed(() => {location.reload()});
     increaseFoodButton = createButton("Increase Food Cap");
     increaseFoodButton.position(430, 120);
+    increaseFoodButton.mousePressed(() => {
+        if(firstCellClicked.data.playerOwned) {
+            if(firstCellClicked.data.food < 255 && 
+            firstCellClicked.data.population - firstCellClicked.data.increaseFoodCost > 0) {
+                firstCellClicked.data.food += 1;
+                firstCellClicked.data.population -= firstCellClicked.data.increaseFoodCost;
+                firstCellClicked.data.increaseFoodCost += 1;
+            } else {
+                increaseFoodButton.hide();
+                text('Can\'t increase further');
+            }
+        } else {
+            alert('You can only upgrade your own cells!');
+        }
+    });
     increaseGrowthButton = createButton("Increase Population Growth");
     increaseGrowthButton.position(430, 170);
+    increaseGrowthButton.mousePressed(() => {
+        if(firstCellClicked.data.playerOwned) {
+            if(firstCellClicked.data.populationGrowthRate < 1.3 &&
+            firstCellClicked.data.population - firstCellClicked.data.increaseGrowthCost > 0) {
+                firstCellClicked.data.populationGrowthRate += 0.01;
+                firstCellClicked.data.population -= firstCellClicked.data.increaseGrowthCost;
+                firstCellClicked.data.increaseGrowthCost += 1;
+            } else {
+                increaseGrowthButton.hide();
+                text('Can\'t increase further', 430, 170);
+            }
+        } else {
+            alert('You can only upgrade your own cells!');
+        }
+    });
     reduceDeathButton = createButton("Reduce Population Decline Rate");
     reduceDeathButton.position(430, 220);
+    reduceDeathButton.mousePressed(() => {
+        if(firstCellClicked.data.playerOwned) {
+            if(firstCellClicked.data.populationDeclineRate < 1 &&
+            firstCellClicked.data.population - firstCellClicked.data.reduceDeathCost > 0) {
+                firstCellClicked.data.populationDeclineRate += 0.01;
+                firstCellClicked.data.population -= firstCellClicked.data.reduceDeathCost;
+                firstCellClicked.data.reduceDeathCost += 1;
+            } else {
+                reduceDeathButton.hide();
+                text('Can\'t reduce further', 430, 220);
+            }
+        } else {
+            alert('You can only upgrade your own cells!');
+        }
+    });
 }
 
 function draw() {
@@ -69,55 +114,8 @@ function draw() {
         text("Cost: " + firstCellClicked.data.reduceDeathCost.toFixed(2) + " population", 430, 250);
     
         increaseFoodButton.show();
-        increaseFoodButton.mousePressed(() => {
-            if(firstCellClicked.data.playerOwned) {
-                if(firstCellClicked.data.food < 255 && 
-                firstCellClicked.data.population - firstCellClicked.data.increaseFoodCost > 0) {
-                    firstCellClicked.data.food += 1;
-                    firstCellClicked.data.population -= firstCellClicked.data.increaseFoodCost;
-                    firstCellClicked.data.increaseFoodCost += 1;
-                } else {
-                    increaseFoodButton.hide();
-                    text('Can\'t increase further');
-                }
-            } else {
-                alert('You can only upgrade your own cells!');
-            }
-        });
-        
         increaseGrowthButton.show();
-        increaseGrowthButton.mousePressed(() => {
-            if(firstCellClicked.data.playerOwned) {
-                if(firstCellClicked.data.populationGrowthRate < 1.3 &&
-                firstCellClicked.data.population - firstCellClicked.data.increaseGrowthCost > 0) {
-                    firstCellClicked.data.populationGrowthRate += 0.01;
-                    firstCellClicked.data.population -= firstCellClicked.data.increaseGrowthCost;
-                    firstCellClicked.data.increaseGrowthCost += 1;
-                } else {
-                    increaseGrowthButton.hide();
-                    text('Can\'t increase further', 430, 170);
-                }
-            } else {
-                alert('You can only upgrade your own cells!');
-            }
-        });
-        
         reduceDeathButton.show();
-        reduceDeathButton.mousePressed(() => {
-            if(firstCellClicked.data.playerOwned) {
-                if(firstCellClicked.data.populationDeclineRate < 1 &&
-                firstCellClicked.data.population - firstCellClicked.data.reduceDeathCost > 0) {
-                    firstCellClicked.data.populationDeclineRate += 0.01;
-                    firstCellClicked.data.population -= firstCellClicked.data.reduceDeathCost;
-                    firstCellClicked.data.reduceDeathCost += 1;
-                } else {
-                    reduceDeathButton.hide();
-                    text('Can\'t reduce further', 430, 220);
-                }
-            } else {
-                alert('You can only upgrade your own cells!');
-            }
-        });
     }
 }
 
