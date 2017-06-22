@@ -116,7 +116,7 @@ function draw() {
     } else {
         text(
             'Cell at: ' + firstCellClicked.gridX + ', ' + firstCellClicked.gridY + ' selected\n' +
-            'Fortifications: ' + firstCellClicked.data.damageReductions + '\n' + 
+            'Fortifications: ' + firstCellClicked.data.damageReductions.toFixed(2) + '\n' + 
             'Food: ' + Math.round(firstCellClicked.data.food) + '\n' +
             'Population Growth Rate: ' + firstCellClicked.data.populationGrowthRate.toFixed(2) + '\n' +
             'Population Decline Rate: ' + firstCellClicked.data.populationDeclineRate.toFixed(2), 430, 50);
