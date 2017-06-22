@@ -5,6 +5,8 @@ var startOverButton;
 
 var increaseFoodButton, increaseGrowthButton, reduceDeathButton, damageReductionsButton;
 
+var balanceAllButton;
+
 var firstCellClicked = null;
 var secondCellClicked = null;
 
@@ -92,6 +94,28 @@ function setup() {
             }
         } else {
             alert('You can only upgrade your own cells!');
+        }
+    });
+    balanceAllButton = createButton("Balance Population");
+    balanceAllButton.position(430, 350);
+    balanceAllButton.mouseClicked(() => {
+        var totalPlayerPopulation = 0;
+        var numberOfPlayerCells = 0;
+        for(var x = 0; x < grid.data.length; x++) {
+            for(var y = 0; y < grid.data[x].length; y++) {
+                if(grid.data[x][y].data.playerOwned) {
+                    totalPlayerPopulation += grid.data[x][y].data.population;
+                    numberOfPlayerCells++;
+                }
+            }
+        }
+        var averagePopulation = totalPlayerPopulation /= numberOfPlayerCells;
+        for(var x = 0; x < grid.data.length; x++) {
+            for(var y = 0; y < grid.data[x].length; y++) {
+                if(grid.data[x][y].data.playerOwned) {
+                    grid.data[x][y].data.population = averagePopulation;
+                }
+            }
         }
     })
 }
