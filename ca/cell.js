@@ -180,9 +180,10 @@ function Cell(x, y, size, gridX, gridY) {
                         }
                     }
                 } else {
-                    alert("Invalid Move! You can only move between neighbouring cells.");
+                    firstCellClicked = secondCellClicked;
+                    secondCellClicked = null; 
                 }
-                firstCellClicked = null;
+                firstCellClicked = secondCellClicked;
                 secondCellClicked = null;
             }
         }
