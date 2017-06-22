@@ -4,10 +4,9 @@ function CellData() {
     this.population = this.food * 0.5;
     this.populationGrowthRate = 1.01;
     this.populationDeclineRate = 0.95;
-    this.increaseFoodCost = 3;
-    this.increaseGrowthCost = 5;
+    this.increaseFoodCost = 1;
+    this.increaseGrowthCost = 25;
     this.reduceDeathCost = 1;
-
 }
 
 function Cell(x, y, size, gridX, gridY) {
@@ -179,9 +178,6 @@ function Cell(x, y, size, gridX, gridY) {
                             alert("Invalid Move! You can only control your own cells.");
                         }
                     }
-                } else {
-                    firstCellClicked = secondCellClicked;
-                    secondCellClicked = null; 
                 }
                 firstCellClicked = secondCellClicked;
                 secondCellClicked = null;

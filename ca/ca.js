@@ -34,7 +34,7 @@ function setup() {
             firstCellClicked.data.population - firstCellClicked.data.increaseFoodCost > 0) {
                 firstCellClicked.data.food += 1;
                 firstCellClicked.data.population -= firstCellClicked.data.increaseFoodCost;
-                firstCellClicked.data.increaseFoodCost += 1;
+                firstCellClicked.data.increaseFoodCost *= 1.05;
             } else {
                 increaseFoodButton.hide();
                 text('Can\'t increase further');
@@ -51,7 +51,7 @@ function setup() {
             firstCellClicked.data.population - firstCellClicked.data.increaseGrowthCost > 0) {
                 firstCellClicked.data.populationGrowthRate += 0.01;
                 firstCellClicked.data.population -= firstCellClicked.data.increaseGrowthCost;
-                firstCellClicked.data.increaseGrowthCost += 1;
+                firstCellClicked.data.increaseGrowthCost *= 2;
             } else {
                 increaseGrowthButton.hide();
                 text('Can\'t increase further', 430, 170);
@@ -64,11 +64,11 @@ function setup() {
     reduceDeathButton.position(430, 220);
     reduceDeathButton.mousePressed(() => {
         if(firstCellClicked.data.playerOwned) {
-            if(firstCellClicked.data.populationDeclineRate < 1 &&
+            if(firstCellClicked.data.populationDeclineRate < 0.99 &&
             firstCellClicked.data.population - firstCellClicked.data.reduceDeathCost > 0) {
                 firstCellClicked.data.populationDeclineRate += 0.01;
                 firstCellClicked.data.population -= firstCellClicked.data.reduceDeathCost;
-                firstCellClicked.data.reduceDeathCost += 1;
+                firstCellClicked.data.reduceDeathCost *= 3;
             } else {
                 reduceDeathButton.hide();
                 text('Can\'t reduce further', 430, 220);
