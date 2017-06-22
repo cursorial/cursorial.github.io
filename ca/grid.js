@@ -19,7 +19,8 @@ function Grid(width, height, cellSize) {
                 this.data[x][y] = new Cell(60 + (x * cellSize * 2) - xOffset, 60 + (y * cellSize * 2) - yOffset, cellSize, x, y);
                 if(x == playerX && y == playerY) {
                     this.data[x][y].data.playerOwned = true;
-                    this.data[x][y].data.population = 170;
+                    this.data[x][y].data.food = 150;
+                    this.data[x][y].data.population = 75;
                 }      
             }
         }

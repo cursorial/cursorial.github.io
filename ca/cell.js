@@ -1,6 +1,9 @@
 function CellData() {
     this.playerOwned = false;
-    this.population = Math.random() * 250;
+    this.food = Math.random() * 150;
+    this.population = this.food * 0.5;
+    this.populationGrowthRate = 1.01;
+    this.populationDeclineRate = 0.95;
 }
 
 function Cell(x, y, size, gridX, gridY) {
@@ -103,11 +106,10 @@ function Cell(x, y, size, gridX, gridY) {
                 }
             }
         }
-        if(this.data.population < 255 && this.data.population > 0) {
-            this.data.population *= 1 + ((Math.random() * 0.2) - 0.09);
-        }
-        if(this.data.population > 255) {
-            this.data.population = 253;
+        if(this.data.population < this.data.food && this.data.population > 0) {
+            this.data.population *= this.data.populationGrowthRate;
+        } else {
+            this.data.population *= this.data.populationDeclineRate;
         }
         if(this.data.population < 0) {
             this.data.population = 2;
@@ -155,10 +157,15 @@ function Cell(x, y, size, gridX, gridY) {
                             firstCellClicked.data.population = average;
                             secondCellClicked.data.population = average;
                         } else if(firstCellClicked.data.playerOwned && !secondCellClicked.data.playerOwned) {
-                            firstCellClicked.data.population -= secondCellClicked.data.population * Math.random();
-                            firstCellClicked.data.population /= 2;
-                            secondCellClicked.data.population = firstCellClicked.data.population;
-                            secondCellClicked.data.playerOwned = true;
+                            if(firstCellClicked.data.population - secondCellClicked.data.population < 0) {
+                                firstCellClicked.data.population /= 2;
+                                secondCellClicked.data.population -= firstCellClicked.data.population;
+                            } else {
+                                firstCellClicked.data.population -= secondCellClicked.data.population * Math.random();
+                                firstCellClicked.data.population /= 2;
+                                secondCellClicked.data.population = firstCellClicked.data.population;
+                                secondCellClicked.data.playerOwned = true;
+                            }
                         } else {
                             alert("Invalid Move! You can only control your own cells.");
                         }

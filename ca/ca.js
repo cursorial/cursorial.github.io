@@ -1,8 +1,10 @@
 var grid = new Grid(6, 6, 30);
-var player = new Player();
 
 var endTurnButton;
 var startOverButton;
+
+var firstCellClicked = null;
+var secondCellClicked = null;
 
 function update() {
    for(var x = 0; x < grid.data.length; x++) {
@@ -31,28 +33,51 @@ function draw() {
             grid.data[x][y].draw();
         }
     }
+    //ui
+    fill(22);
+    rect(420, 30, 350, 350);
     fill(255);
-    textSize(15);
-    text("How to play:", 400, 20);
-    fill(180);
-    text("-You have control of the cell with a blue border.", 400, 40);
-    fill(220);
-    text("-If you hover over an adjacent cell that is green\nyou can move population to it to take it over.", 400, 60);
-    fill(180);
-    text("-If the cell is red you cannot take it over.", 400, 100);
-    fill(220);
-    text("-When you expand your new cell will also have a\nblue border.", 400, 120);
-    fill(180);
-    text("-The number in a cell represent's that cell's population", 400, 160);
-    fill(220);
-    text("-Beware of other cells with higher numbers,\nthey may take your territory if your population is too low.", 400, 180)
-    fill(180);
-    text("-Be careful when you expand, your population will drop\nsignificantly in order to take new territories.", 400, 220);
-    fill(220, 100, 100);
-    text("-Move population by clicking on the cell you want to\nmove from, and then the cell that you want to move to.", 400, 260)
-    fill(200, 200, 120);
-    text("Keyboard shortcuts\nSpace - End Turn", 400, 300);
-    text("You can start over by refreshing the page", 400, 340);
+    if(firstCellClicked == null) {
+        text('No cell selected', 430, 50);
+    } else {
+        text(
+            'Cell at: ' + firstCellClicked.gridX + ', ' + firstCellClicked.gridY + ' selected\n' + 
+            'Food: ' + Math.round(firstCellClicked.data.food) + '\n' +
+            'Population Growth Rate: ' + firstCellClicked.data.populationGrowthRate + '\n' +
+            'Population Decline Rate: ' + firstCellClicked.data.populationDeclineRate, 430, 50);
+            if(firstCellClicked.data.population < firstCellClicked.data.food) {
+                fill(120, 255, 120);
+                text('Population is GROWING', 430, 100);
+            } else {
+                fill(255, 120, 120);
+                text('Population is DECLINING', 430, 100);
+            }
+
+        var increaseFoodButton, increaseGrowthButton, reduceDeathButton;
+        increaseFoodButton = createButton("Increase Food Cap");
+        increaseFoodButton.position(430, 120);
+        increaseFoodButton.mousePressed(() => {
+            firstCellClicked.data.food += 1;
+            firstCellClicked.data.population -= 3;
+        });
+        text("Cost: 3 population", 430, 150);
+
+        increaseGrowthButton = createButton("Increase Population Growth");
+        increaseGrowthButton.position(430, 170);
+        increaseGrowthButton.mousePressed(() => {
+            firstCellClicked.data.populationGrowthRate += 0.01;
+            firstCellClicked.data.population -= 5;
+        });
+        text("Cost: 5 population", 430, 200);
+
+        reduceDeathButton = createButton("Reduce Population Decline Rate");
+        reduceDeathButton.position(430, 220);
+        reduceDeathButton.mousePressed(() => {
+            firstCellClicked.data.populationDeclineRate += 0.02;
+            firstCellClicked.data.population -= 5;
+        });
+        text("Cost: 5 population", 430, 250);
+    }
 }
 
 function keyPressed() {
@@ -61,9 +86,6 @@ function keyPressed() {
         return false;
     }
 }
-
-var firstCellClicked = null;
-var secondCellClicked = null;
 
 function mouseClicked() {
     for(var x = 0; x < grid.data.length; x++) {
