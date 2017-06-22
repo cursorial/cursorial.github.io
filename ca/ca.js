@@ -81,9 +81,9 @@ function setup() {
     damageReductionsButton.position(430, 290);
     damageReductionsButton.mousePressed(() => {
         if(firstCellClicked.data.playerOwned) {
-            if(firstCellClicked.data.damageReductions < 0.99 &&
+            if(firstCellClicked.data.damageReductions < 1 &&
                firstCellClicked.data.population - firstCellClicked.data.damageReductionsCost > 0) {
-                firstCellClicked.data.damageReductions += 0.01;
+                firstCellClicked.data.damageReductions += 0.025;
                 firstCellClicked.data.population -= firstCellClicked.data.damageReductionsCost;
                 firstCellClicked.data.damageReductionsCost *= 1.1;
             } else {
@@ -116,7 +116,7 @@ function draw() {
     } else {
         text(
             'Cell at: ' + firstCellClicked.gridX + ', ' + firstCellClicked.gridY + ' selected\n' +
-            'Fortifications: ' + firstCellClicked.data.damageReductions.toFixed(2) + '\n' + 
+            'Fortifications: ' + firstCellClicked.data.damageReductions.toFixed(3) + '\n' + 
             'Food: ' + Math.round(firstCellClicked.data.food) + '\n' +
             'Population Growth Rate: ' + firstCellClicked.data.populationGrowthRate.toFixed(2) + '\n' +
             'Population Decline Rate: ' + firstCellClicked.data.populationDeclineRate.toFixed(2), 430, 50);
@@ -127,7 +127,7 @@ function draw() {
                 fill(255, 120, 120);
                 text('Population is DECLINING', 430, 120);
             }
-                if(firstCellClicked.data.peacefulness() == 1.5) {
+                if(firstCellClicked.data.peacefulness() == 2) {
                     fill(255, 120, 120);
                     text('This faction is hostile and aggressive', 430, 130);
                 }

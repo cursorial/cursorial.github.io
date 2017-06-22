@@ -4,7 +4,7 @@ function CellData() {
     this.population = this.food * 0.5;
     this.populationGrowthRate = 1.01;
     this.populationDeclineRate = 0.95;
-    this.damageReductions = 0.01;
+    this.damageReductions = 0.05;
     this.increaseFoodCost = 1;
     this.increaseGrowthCost = 10;
     this.reduceDeathCost = 1;
@@ -16,7 +16,7 @@ function CellData() {
     }
     this.peacefulness = function() {
         if(this.ownerColour.r > this.ownerColour.g) {
-            return 1.5;
+            return 2;
         } else if(this.ownerColour.g > this.ownerColour.r) {
             return 3;
         }
@@ -122,14 +122,21 @@ function Cell(x, y, size, gridX, gridY) {
                 for(var neighbour of neighbours) {
                     if(neighbour != null) {
                         if(neighbour.data.population < this.data.population / this.data.peacefulness()) {
-                            this.data.population = this.data.population - (neighbour.data.population * Math.random());
+                            this.data.population = this.data.population - neighbour.data.population * (1 - this.data.damageReductions);
                             neighbour.data.population = this.data.population / 2;
                             neighbour.data.playerOwned = false;
                             neighbour.data.ownerColour = this.data.ownerColour;
                         }
-                        if(neighbour.data.population > this.data.population * this.data.peacefulness()) {
+                        if(neighbour.data.population > this.data.population * this.data.peacefulness() * 2) {
                             this.data.population = this.data.population / 2;
                             neighbour.data.population -= this.data.population * (1 - this.data.damageReductions);
+                        }
+                        if(neighbour.data.ownerColour == this.data.ownerColour) {
+                            if(neighbour.data.population / this.data.population > 1.25 || 
+                                this.data.population / neighbour.data.population > 1.25) {
+                                neighbour.data.population = (this.data.population + neighbour.data.population) / 2;
+                                this.data.population = neighbour.data.population;
+                            }
                         }
                     }
                 }
@@ -188,11 +195,11 @@ function Cell(x, y, size, gridX, gridY) {
                         } else if(firstCellClicked.data.playerOwned && !secondCellClicked.data.playerOwned) {
                             if(firstCellClicked.data.population - secondCellClicked.data.population < 0) {
                                 firstCellClicked.data.population /= 2;
-                                secondCellClicked.data.population -= firstCellClicked.data.population;
+                                secondCellClicked.data.population -= firstCellClicked.data.population * (1 - secondCellClicked.data.damageReductions);
                             } else {
-                                firstCellClicked.data.population -= secondCellClicked.data.population * Math.random();
+                                firstCellClicked.data.population -= secondCellClicked.data.population;
                                 firstCellClicked.data.population /= 2;
-                                secondCellClicked.data.population = firstCellClicked.data.population;
+                                secondCellClicked.data.population = firstCellClicked.data.population * (1 - secondCellClicked.data.damageReductions);
                                 secondCellClicked.data.playerOwned = true;
                             }
                         } else {
