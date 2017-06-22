@@ -4,9 +4,23 @@ function CellData() {
     this.population = this.food * 0.5;
     this.populationGrowthRate = 1.01;
     this.populationDeclineRate = 0.95;
+    this.damageReductions = 0.01;
     this.increaseFoodCost = 1;
-    this.increaseGrowthCost = 25;
+    this.increaseGrowthCost = 10;
     this.reduceDeathCost = 1;
+    this.damageReductionsCost = 1;
+    this.ownerColour = {
+        r: Math.random() * 255,
+        g: Math.random() * 255,
+        b: Math.random() * 255
+    }
+    this.peacefulness = function() {
+        if(this.ownerColour.r > this.ownerColour.g) {
+            return 1.5;
+        } else if(this.ownerColour.g > this.ownerColour.r) {
+            return 3;
+        }
+    }
 }
 
 function Cell(x, y, size, gridX, gridY) {
@@ -62,9 +76,11 @@ function Cell(x, y, size, gridX, gridY) {
             }
         }
         if(this.data.playerOwned) {
+            strokeWeight(15);
             stroke(120, 120, 255, 150);
         } else {
-            stroke(0);
+            strokeWeight(2);
+            stroke(this.data.ownerColour.r, this.data.ownerColour.g, this.data.ownerColour.b, 150);
         }
         this.polygon(this.x, this.y, this.size, 6);
         fill(0);
@@ -105,10 +121,15 @@ function Cell(x, y, size, gridX, gridY) {
             if(neighbours != null) {
                 for(var neighbour of neighbours) {
                     if(neighbour != null) {
-                        if(neighbour.data.population < this.data.population / 3) {
+                        if(neighbour.data.population < this.data.population / this.data.peacefulness()) {
                             this.data.population = this.data.population - (neighbour.data.population * Math.random());
                             neighbour.data.population = this.data.population / 2;
                             neighbour.data.playerOwned = false;
+                            neighbour.data.ownerColour = this.data.ownerColour;
+                        }
+                        if(neighbour.data.population > this.data.population * this.data.peacefulness()) {
+                            this.data.population = this.data.population / 2;
+                            neighbour.data.population -= this.data.population * (1 - this.data.damageReductions);
                         }
                     }
                 }

@@ -3,7 +3,7 @@ var grid = new Grid(6, 6, 30);
 var endTurnButton;
 var startOverButton;
 
-var increaseFoodButton, increaseGrowthButton, reduceDeathButton;
+var increaseFoodButton, increaseGrowthButton, reduceDeathButton, damageReductionsButton;
 
 var firstCellClicked = null;
 var secondCellClicked = null;
@@ -27,7 +27,7 @@ function setup() {
     startOverButton.position(100, 400);
     startOverButton.mousePressed(() => {location.reload()});
     increaseFoodButton = createButton("Increase Food Cap");
-    increaseFoodButton.position(430, 120);
+    increaseFoodButton.position(430, 140);
     increaseFoodButton.mousePressed(() => {
         if(firstCellClicked.data.playerOwned) {
             if(firstCellClicked.data.food < 255 && 
@@ -37,14 +37,14 @@ function setup() {
                 firstCellClicked.data.increaseFoodCost *= 1.05;
             } else {
                 increaseFoodButton.hide();
-                text('Can\'t increase further');
+                text('Can\'t increase further', 430, 140);
             }
         } else {
             alert('You can only upgrade your own cells!');
         }
     });
     increaseGrowthButton = createButton("Increase Population Growth");
-    increaseGrowthButton.position(430, 170);
+    increaseGrowthButton.position(430, 190);
     increaseGrowthButton.mousePressed(() => {
         if(firstCellClicked.data.playerOwned) {
             if(firstCellClicked.data.populationGrowthRate < 1.3 &&
@@ -54,14 +54,14 @@ function setup() {
                 firstCellClicked.data.increaseGrowthCost *= 2;
             } else {
                 increaseGrowthButton.hide();
-                text('Can\'t increase further', 430, 170);
+                text('Can\'t increase further', 430, 190);
             }
         } else {
             alert('You can only upgrade your own cells!');
         }
     });
     reduceDeathButton = createButton("Reduce Population Decline Rate");
-    reduceDeathButton.position(430, 220);
+    reduceDeathButton.position(430, 240);
     reduceDeathButton.mousePressed(() => {
         if(firstCellClicked.data.playerOwned) {
             if(firstCellClicked.data.populationDeclineRate < 0.99 &&
@@ -71,12 +71,29 @@ function setup() {
                 firstCellClicked.data.reduceDeathCost *= 3;
             } else {
                 reduceDeathButton.hide();
-                text('Can\'t reduce further', 430, 220);
+                text('Can\'t reduce further', 430, 240);
             }
         } else {
             alert('You can only upgrade your own cells!');
         }
     });
+    damageReductionsButton = createButton("Increase Fortifications");
+    damageReductionsButton.position(430, 290);
+    damageReductionsButton.mousePressed(() => {
+        if(firstCellClicked.data.playerOwned) {
+            if(firstCellClicked.data.damageReductions < 0.99 &&
+               firstCellClicked.data.population - firstCellClicked.data.damageReductionsCost > 0) {
+                firstCellClicked.data.damageReductions += 0.01;
+                firstCellClicked.data.population -= firstCellClicked.data.damageReductionsCost;
+                firstCellClicked.data.damageReductionsCost *= 1.1;
+            } else {
+                damageReductionsButton.hide();
+                text('Can\'t reduce further', 430, 270);
+            }
+        } else {
+            alert('You can only upgrade your own cells!');
+        }
+    })
 }
 
 function draw() {
@@ -95,27 +112,57 @@ function draw() {
         increaseFoodButton.hide();
         increaseGrowthButton.hide();
         reduceDeathButton.hide();
-
+        damageReductionsButton.hide();
     } else {
         text(
-            'Cell at: ' + firstCellClicked.gridX + ', ' + firstCellClicked.gridY + ' selected\n' + 
+            'Cell at: ' + firstCellClicked.gridX + ', ' + firstCellClicked.gridY + ' selected\n' +
+            'Fortifications: ' + firstCellClicked.data.damageReductions + '\n' + 
             'Food: ' + Math.round(firstCellClicked.data.food) + '\n' +
             'Population Growth Rate: ' + firstCellClicked.data.populationGrowthRate.toFixed(2) + '\n' +
             'Population Decline Rate: ' + firstCellClicked.data.populationDeclineRate.toFixed(2), 430, 50);
             if(firstCellClicked.data.population < firstCellClicked.data.food) {
                 fill(120, 255, 120);
-                text('Population is GROWING', 430, 100);
+                text('Population is GROWING', 430, 120);
             } else {
                 fill(255, 120, 120);
-                text('Population is DECLINING', 430, 100);
+                text('Population is DECLINING', 430, 120);
             }
-        text("Cost: " + firstCellClicked.data.increaseFoodCost.toFixed(2) + " population", 430, 150);
-        text("Cost: " + firstCellClicked.data.increaseGrowthCost.toFixed(2) + " population", 430, 200);
-        text("Cost: " + firstCellClicked.data.reduceDeathCost.toFixed(2) + " population", 430, 250);
-    
+                if(firstCellClicked.data.peacefulness() == 1.5) {
+                    fill(255, 120, 120);
+                    text('This faction is hostile and aggressive', 430, 130);
+                }
+                if(firstCellClicked.data.peacefulness() == 3) {
+                    fill(120, 255, 120);
+                    text('This faction is peaceful and passive', 430, 130);
+                }
+        if(firstCellClicked.data.population - firstCellClicked.data.increaseFoodCost > 0) {
+            fill(120, 255, 120);
+        } else {
+            fill(255, 120, 120);
+        }
+        text("Cost: " + firstCellClicked.data.increaseFoodCost.toFixed(2) + " population", 430, 170);
+        if(firstCellClicked.data.population - firstCellClicked.data.increaseGrowthCost > 0) {
+            fill(120, 255, 120);
+        } else {
+            fill(255, 120, 120);
+        }
+        text("Cost: " + firstCellClicked.data.increaseGrowthCost.toFixed(2) + " population", 430, 220);
+        if(firstCellClicked.data.population - firstCellClicked.data.reduceDeathCost > 0) {
+            fill(120, 255, 120);
+        } else {
+            fill(255, 120, 120);
+        }
+        text("Cost: " + firstCellClicked.data.reduceDeathCost.toFixed(2) + " population", 430, 270);
+        if(firstCellClicked.data.population - firstCellClicked.data.damageReductions > 0) {
+            fill(120, 255, 120);
+        } else {
+            fill(255, 120, 120);
+        }
+        text("Cost: " + firstCellClicked.data.damageReductionsCost.toFixed(2) + " population", 430, 320);
         increaseFoodButton.show();
         increaseGrowthButton.show();
         reduceDeathButton.show();
+        damageReductionsButton.show();
     }
 }
 
