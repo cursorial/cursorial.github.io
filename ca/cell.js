@@ -75,6 +75,7 @@ function Cell(x, y, size, gridX, gridY) {
         text(Math.round(this.data.population), this.x - 6, this.y + 3);
 
         if(this.playerOwnedCells().length == 0) {
+            push();
             stroke(0);
             fill(81);
             rect(50, 50, 300, 300);
@@ -83,8 +84,10 @@ function Cell(x, y, size, gridX, gridY) {
             textSize(30);
             text("Game Over", 125, 150);
             text("Click Start Over", 90, 250);
+            pop();
         }
         if(this.playerOwnedCells().length == grid.data.length * grid.data[0].length) {
+            push();
             stroke(0);
             fill(81);
             rect(50, 50, 300, 300);
@@ -93,6 +96,7 @@ function Cell(x, y, size, gridX, gridY) {
             textSize(30);
             text("Game Won", 125, 150);
             text("Click Start Over", 90, 250);
+            pop();
         }
     }
     

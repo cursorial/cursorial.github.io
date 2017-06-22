@@ -64,9 +64,9 @@ function draw() {
                 fill(255, 120, 120);
                 text('Population is DECLINING', 430, 100);
             }
-        text("Cost: " + firstCellClicked.data.increaseFoodCost + " population", 430, 150);
-        text("Cost: " + firstCellClicked.data.increaseGrowthCost + " population", 430, 200);
-        text("Cost: " + firstCellClicked.data.reduceDeathCost + " population", 430, 250);
+        text("Cost: " + firstCellClicked.data.increaseFoodCost.toFixed(2) + " population", 430, 150);
+        text("Cost: " + firstCellClicked.data.increaseGrowthCost.toFixed(2) + " population", 430, 200);
+        text("Cost: " + firstCellClicked.data.reduceDeathCost.toFixed(2) + " population", 430, 250);
     
         increaseFoodButton.show();
         increaseFoodButton.mousePressed(() => {
