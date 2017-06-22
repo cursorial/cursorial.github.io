@@ -4,6 +4,10 @@ function CellData() {
     this.population = this.food * 0.5;
     this.populationGrowthRate = 1.01;
     this.populationDeclineRate = 0.95;
+    this.increaseFoodCost = 3;
+    this.increaseGrowthCost = 5;
+    this.reduceDeathCost = 1;
+
 }
 
 function Cell(x, y, size, gridX, gridY) {
@@ -93,16 +97,17 @@ function Cell(x, y, size, gridX, gridY) {
     }
     
     this.update = function() {
-        var neighbours = this.neighbours();
-        if(neighbours != null) {
-            for(var neighbour of neighbours) {
-                if(neighbour != null) {
-                    if(neighbour.data.population < this.data.population / 3) {
-                        this.data.population = this.data.population - (neighbour.data.population * Math.random());
-                        neighbour.data.population = this.data.population / 2;
-                        neighbour.data.playerOwned = false;
+        if(!this.data.playerOwned) {
+            var neighbours = this.neighbours();
+            if(neighbours != null) {
+                for(var neighbour of neighbours) {
+                    if(neighbour != null) {
+                        if(neighbour.data.population < this.data.population / 3) {
+                            this.data.population = this.data.population - (neighbour.data.population * Math.random());
+                            neighbour.data.population = this.data.population / 2;
+                            neighbour.data.playerOwned = false;
+                        }
                     }
-                    
                 }
             }
         }

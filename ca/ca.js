@@ -33,7 +33,6 @@ function draw() {
             grid.data[x][y].draw();
         }
     }
-    //ui
     fill(22);
     rect(420, 30, 350, 350);
     fill(255);
@@ -57,26 +56,47 @@ function draw() {
         increaseFoodButton = createButton("Increase Food Cap");
         increaseFoodButton.position(430, 120);
         increaseFoodButton.mousePressed(() => {
-            firstCellClicked.data.food += 1;
-            firstCellClicked.data.population -= 3;
+            if(firstCellClicked.data.food < 255 && 
+               firstCellClicked.data.population - firstCellClicked.data.increaseFoodCost > 0) {
+                firstCellClicked.data.food += 1;
+                firstCellClicked.data.population -= firstCellClicked.data.increaseFoodCost;
+                firstCellClicked.data.increaseFoodCost += 1;
+            } else {
+                increaseFoodButton.hide();
+                text('Can\'t increase further');
+            }
         });
-        text("Cost: 3 population", 430, 150);
+        text("Cost: " + firstCellClicked.data.increaseFoodCost + " population", 430, 150);
 
         increaseGrowthButton = createButton("Increase Population Growth");
         increaseGrowthButton.position(430, 170);
         increaseGrowthButton.mousePressed(() => {
-            firstCellClicked.data.populationGrowthRate += 0.01;
-            firstCellClicked.data.population -= 5;
+            if(firstCellClicked.data.populationGrowthRate < 1.3 &&
+               firstCellClicked.data.population - firstCellClicked.data.increaseGrowthCost > 0) {
+                firstCellClicked.data.populationGrowthRate += 0.01;
+                firstCellClicked.data.population -= firstCellClicked.data.increaseGrowthCost;
+                firstCellClicked.data.increaseGrowthCost += 1;
+            } else {
+                increaseGrowthButton.hide();
+                text('Can\'t increase further', 430, 170);
+            }
         });
-        text("Cost: 5 population", 430, 200);
+        text("Cost: " + firstCellClicked.data.increaseGrowthCost + " population", 430, 200);
 
         reduceDeathButton = createButton("Reduce Population Decline Rate");
         reduceDeathButton.position(430, 220);
         reduceDeathButton.mousePressed(() => {
-            firstCellClicked.data.populationDeclineRate += 0.02;
-            firstCellClicked.data.population -= 5;
+            if(firstCellClicked.data.populationDeclineRate < 1 &&
+               firstCellClicked.data.population - firstCellClicked.data.reduceDeathCost > 0) {
+                firstCellClicked.data.populationDeclineRate += 0.01;
+                firstCellClicked.data.population -= firstCellClicked.data.reduceDeathCost;
+                firstCellClicked.data.reduceDeathCost += 1;
+            } else {
+                reduceDeathButton.hide();
+                text('Can\'t reduce further', 430, 220);
+            }
         });
-        text("Cost: 5 population", 430, 250);
+        text("Cost: " + firstCellClicked.data.reduceDeathCost + " population", 430, 250);
     }
 }
 
