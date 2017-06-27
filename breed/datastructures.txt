@@ -1,0 +1,48 @@
+Cell
+    Relations
+        Allies
+        Enemies
+        Neutral
+    Climate
+        Temperature
+        Moisture
+    Resources
+        Food
+        Water
+        Minerals
+    Population
+        Racial Distribution
+    Structures
+        Defenses
+        Houses
+        Farms
+
+Race
+    Relations
+        Allies
+        Enemies
+        Neutral
+    Preferred Climate
+    Resource Requirements
+    Birth Rate
+    Life Span
+    Desires
+        Hoarding
+        Building
+        Trading
+        Peace
+        War
+    Special Ability
+        Food Production
+        Long Life
+        Defensive Borders
+        Building Speed
+        Low Maintenance
+        Baby Boomers
+        Adaptive
+
+Person
+    Parents
+    Children
+    Location
+    Race
