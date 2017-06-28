@@ -29,6 +29,11 @@ function Cell(x, y){
                 water: Math.ceil(Math.random() * 2),
                 minerals: 0
             };
+
+            person.location = {
+                x: this.x,
+                y: this.y
+            }
             this.population.push(person);
             this.bachelors.push(person);
         }
@@ -106,54 +111,46 @@ function Cell(x, y){
                 }
             }
             if(this.resources.food > 2 && person.partner != null) {
-                var parent1Race = person.race;
-                var parent2Race = person.partner.race;
+                var parent1 = person;
+                var parent2 = person.partner;
                 for(var i = 0; i < person.race.birthRate; i++) {
-                    var newPerson = new Person();
-                    newPerson.parents.push(person);
-                    newPerson.parents.push(person.partner);
-                    newPerson.generation = newPerson.parents[0].generation + 1;
-                    newPerson.id = newPerson.parents[0].id + newPerson.parents[1].id;
-                    var blendedRace = new Race();
+                    var baby = new Person();
 
-                    blendedRace.preferredClimate = {
+                    baby.location = parent1.location;
+                    baby.generation = parent1.generation + 1;
+
+                    baby.race = parent1.race;
+                    baby.race.preferredClimate = {
                         temperature: {
-                            max: (parent1Race.preferredClimate.temperature.max + parent2Race.preferredClimate.temperature.max) / 2,
-                            min: (parent1Race.preferredClimate.temperature.min + parent2Race.preferredClimate.temperature.min) / 2
+                            max: (parent1.race.preferredClimate.temperature.max + parent2.race.preferredClimate.temperature.min) / 2,
+                            min: (parent1.race.preferredClimate.temperature.min + parent2.race.preferredClimate.temperature.min) / 2
                         },
                         moisture: {
-                            max: (parent1Race.preferredClimate.moisture.max + parent2Race.preferredClimate.moisture.max) / 2,
-                            min: (parent1Race.preferredClimate.moisture.min + parent2Race.preferredClimate.moisture.min) / 2
+                            max: (parent1.race.preferredClimate.moisture.max + parent2.race.preferredClimate.temperature.min) / 2,
+                            min: (parent1.race.preferredClimate.moisture.max + parent2.race.preferredClimate.temperature.min) / 2
                         }
                     }
 
-                    blendedRace.resourceRequirements = {
-                        food: (parent1Race.resourceRequirements.food + parent2Race.resourceRequirements.food) / 2,
-                        water: (parent1Race.resourceRequirements.water + parent2Race.resourceRequirements.water) / 2,
-                        minerals: (parent1Race.resourceRequirements.food + parent2Race.resourceRequirements.minerals) / 2
-                    }
+                    baby.race.resourceRequirements = {
+                        food: (parent1.race.resourceRequirements.food + parent2.race.resourceRequirements.food) / 2,
+                        water: (parent1.race.resourceRequirements.water + parent2.race.resourceRequirements.water) / 2
+                    };
 
-                    newPerson.race = blendedRace;
-
-                    person.partner.children.push(newPerson);
-                    person.children.push(newPerson);
-                    
-                    this.population.push(newPerson);
-                    this.bachelors.push(newPerson);
-                    this.resources.food -= person.race.resourceRequirements.food;
+                    parent1.children.push(baby);
+                    parent2.children.push(baby);
+                    this.population.push(baby);
+                    this.bachelors.push(baby);
                 }
             }
             if(person.age > person.race.lifeSpan) {
-                if(Math.random() > 0.2) {
+                if(Math.random() > person.race.hardiness) {
                     this.population.splice(this.population.indexOf(person), 1);
                 }
             }
             if(this.resources.food < this.population.length) {
-                this.population.splice(2, this.population.length - this.resources.food);
+                this.population.splice(this.population.indexOf(person));
             }
         }
-
-        
 
         if(this.climate.moisture < 0) {
             this.climate.moisture = 1;

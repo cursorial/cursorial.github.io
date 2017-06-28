@@ -11,7 +11,7 @@ function setup() {
             cells[x][y].init();
         }
     }
-    frameRate(60);
+    frameRate(20);
 }
 
 function draw() {
@@ -60,13 +60,15 @@ function draw() {
         fill(255);
         text('Temperature: ' + Math.round(currentCell.climate.temperature), 810, 20);
         text('Moisture: ' + Math.round(currentCell.climate.moisture), 810, 30);
-        text('Food: ' + Math.round(currentCell.resources.food), 810, 40);
+        text('Food (surplus): ' + Math.round(currentCell.resources.food), 810, 40);
         text('Water: ' + Math.round(currentCell.resources.water), 810, 50);
         text('Minerals: ' + Math.round(currentCell.resources.minerals), 810, 60);
         text('Population: ' + Math.round(currentCell.population.length), 810, 70);
 
         if(currentCell.population.length > 0) {
-            text('Person Age: ' + currentCell.population[0].age, 810, 80);
+            text('Person: ', 810, 80)
+            text('Age: ' + currentCell.population[0].age, 820, 90);
+            text('Generation: ' + currentCell.population[0].generation, 820, 100);
         }
     }
     

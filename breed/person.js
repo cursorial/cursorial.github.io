@@ -1,6 +1,4 @@
 function Person() {
-    this.id = 1;
-    this.parents = [];
     this.children = [];
     this.location = {
         x: 0,

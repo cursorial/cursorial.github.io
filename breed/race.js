@@ -16,11 +16,11 @@ function Race() {
 
     this.resourceRequirements = {
         food: 0,
-        water: 0,
-        minerals: 0
+        water: 0
     };
 
     this.birthRate = 2;
+    this.hardiness = 0.1;
     this.lifeSpan = Math.random() * 100;
 
     this.desires = [];
