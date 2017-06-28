@@ -65,7 +65,7 @@ function Cell(x, y){
 
     this.racialDistribution = function() {
         var races = [];
-        for(var p of population) {
+        for(var p of this.population) {
             if(!races.includes(p.race)) { 
                 races.push(p.race);
             }
@@ -74,7 +74,7 @@ function Cell(x, y){
         var raceCounters = [];
         for(var x = 0; x < races.length; x++) {
             raceCounters[x] = 0;
-            for(var p of population) { 
+            for(var p of this.population) { 
                 if(p.race == races[x].length) { 
                     raceCounters[x]++; 
                 }
@@ -87,7 +87,7 @@ function Cell(x, y){
         };
     }
 
-    this.update = function() {
+    this.update = function(cells) {
         this.climate.temperature += (Math.random() * 1) - 0.5;
         this.climate.moisture += (Math.random() * 10) - 5;
         this.resources.water += (Math.random() * 10) - 5;
@@ -103,17 +103,17 @@ function Cell(x, y){
             
             this.food -= person.race.resourceRequirements.food;
             if(person.partner == null) {
-                if(this.bachelors.length > 0) {
+                if(this.bachelors.length > 1) {
                     this.bachelors.splice(this.bachelors.indexOf(person), 1);
                     var bachelorsIndex = Math.floor(Math.random() * this.bachelors.length);
                     person.partner = this.bachelors[bachelorsIndex];
-                    this.bachelors.splice(bachelorsIndex);
+                    this.bachelors.splice(bachelorsIndex, 1);
                 }
             }
             if(this.resources.food > 2 && person.partner != null) {
                 var parent1 = person;
                 var parent2 = person.partner;
-                for(var i = 0; i < person.race.birthRate; i++) {
+                if(parent1.age > 20 && parent2.age > 20 && Math.random() > 0.8) {
                     var baby = new Person();
 
                     baby.location = parent1.location;
@@ -144,11 +144,35 @@ function Cell(x, y){
             }
             if(person.age > person.race.lifeSpan) {
                 if(Math.random() > person.race.hardiness) {
+                    if(person.partner != null) {
+                        person.partner.partner = null;
+                        this.bachelors.push(person.partner);
+                    }
                     this.population.splice(this.population.indexOf(person), 1);
                 }
             }
             if(this.resources.food < this.population.length) {
-                this.population.splice(this.population.indexOf(person));
+                if(person.partner != null) {
+                    person.partner.partner = null;
+                    this.bachelors.push(person.partner);
+                }
+                this.population.splice(this.population.indexOf(person), 1);
+            }
+
+            var happiestCell = this;
+            for(var n of this.neighbours(cells)) {
+                if(n != null) {
+                    if(n.getHappinessIndex(person, cells) > happiestCell.getHappinessIndex(person, cells)) {
+                        happiestCell = n;
+                    }
+                }
+            }
+
+            if(person.partner == null && happiestCell != this) {
+                this.population.splice(this.population.indexOf(person), 1);
+                this.bachelors.splice(this.bachelors.indexOf(person), 1);
+                happiestCell.population.push(person);
+                happiestCell.bachelors.push(person);
             }
         }
 
@@ -167,5 +191,35 @@ function Cell(x, y){
         if(this.resources.minerals < 0) {
             this.resources.minerals = 1;
         }
+    }
+
+    this.getHappinessIndex = function(person, cells) {
+        var happinessIndex = 0;
+        if(this.temperature > person.race.preferredClimate.temperature.min && this.temperature < person.race.preferredClimate.temperature.max) {
+            happinessIndex += 1;
+        }
+        if(this.moisture > person.race.preferredClimate.moisture.min && this.moisture < person.race.preferredClimate.moisture.max) {
+            happinessIndex += 1;
+        }
+        if(this.resources.food > cells[person.location.x][person.location.y].resources.food) {
+            happinessIndex += 1;
+        }
+        if(this.resources.water > cells[person.location.x][person.location.y].resources.water) {
+            happinessIndex += 1;
+        }
+        return happinessIndex;
+    }
+
+    this.neighbours = function(cells) {
+        return [
+            this.x > 0 ? cells[x - 1][y] : null,
+            this.x < cells.length - 1 ? cells[x + 1][y] : null,
+            this.y > 0 ? cells[x][y - 1] : null,
+            this.y < cells[0].length - 1 ? cells[x][y + 1] : null,
+            this.x > 0 && this.y > 0 ? cells[x - 1][y - 1] : null,
+            this.x < cells.length - 1 && this.y < cells[0].length - 1 ? cells[x + 1][y + 1] : null,
+            this.x > 0 && this.y < cells[0].length - 1 ? cells[x - 1][y + 1] : null,
+            this.x < cells.length - 1 && this.y > 0 ? cells[x + 1][y - 1] : null
+        ];
     }
 }

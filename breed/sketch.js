@@ -1,4 +1,4 @@
-var lens = ['Temperature', 'Population', 'None', 'None'];
+var lens = ['Temperature', 'Food', 'None', 'Population'];
 
 var cells = [];
 
@@ -11,7 +11,7 @@ function setup() {
             cells[x][y].init();
         }
     }
-    frameRate(20);
+    frameRate(12);
 }
 
 function draw() {
@@ -24,6 +24,7 @@ function draw() {
                     if(i == 3) {
                         f.push(255);
                     } else {
+                        noStroke();
                         f.push(0);
                     }
                 }
@@ -48,7 +49,7 @@ function draw() {
             }
             fill(f[0], f[1], f[2], f[3]);     
             rect(x * 40, y * 40, 40, 40);
-            cells[x][y].update();
+            cells[x][y].update(cells);
         }
     }
 
@@ -66,10 +67,20 @@ function draw() {
         text('Population: ' + Math.round(currentCell.population.length), 810, 70);
 
         if(currentCell.population.length > 0) {
+            var person = currentCell.population[0];
             text('Person: ', 810, 80)
-            text('Age: ' + currentCell.population[0].age, 820, 90);
-            text('Generation: ' + currentCell.population[0].generation, 820, 100);
+            text('Age: ' + person.age, 820, 90);
+            text('Generation: ' + person.generation, 820, 100);
+            text('Children: ' + person.children.length, 820, 110);
+            if(person.partner != null) {
+                text('Partner: ', 820, 120);
+                text('Age: ' + person.partner.age, 830, 130);
+                text('Generation: ' + person.partner.generation, 830, 140);
+            }
         }
+
+        text('Bachelors: ' + currentCell.bachelors.length, 810, 150);
+        text('Number of Races: ' + currentCell.racialDistribution().races.length, 810, 160);
     }
     
 }
