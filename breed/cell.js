@@ -13,6 +13,10 @@ function Cell(x, y){
         for(var x = 0; x < 2; x++) {
             var person = new Person();
             person.race = new Race();
+            person.race.origin = {
+                x: this.x,
+                y: this.y
+            }
             person.race.preferredClimate = {
                 temperature: {
                     max: this.climate.temperature + 10,

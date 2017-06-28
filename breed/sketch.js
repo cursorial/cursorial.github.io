@@ -72,15 +72,17 @@ function draw() {
             text('Age: ' + person.age, 820, 90);
             text('Generation: ' + person.generation, 820, 100);
             text('Children: ' + person.children.length, 820, 110);
+            text('Race Origin: ' + person.race.origin.x + ', ' + person.race.origin.y, 820, 120);
             if(person.partner != null) {
-                text('Partner: ', 820, 120);
-                text('Age: ' + person.partner.age, 830, 130);
-                text('Generation: ' + person.partner.generation, 830, 140);
+                text('Partner: ', 820, 130);
+                text('Age: ' + person.partner.age, 830, 140);
+                text('Generation: ' + person.partner.generation, 830, 150);
+                text('Race Origin: ' + person.partner.race.origin.x + ', ' + person.partner.race.origin.y, 830, 160);
             }
         }
 
-        text('Bachelors: ' + currentCell.bachelors.length, 810, 150);
-        text('Number of Races: ' + currentCell.racialDistribution().races.length, 810, 160);
+        text('Bachelors: ' + currentCell.bachelors.length, 810, 170);
+        text('Number of Races: ' + currentCell.racialDistribution().races.length, 810, 180);
     }
     
 }

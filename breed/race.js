@@ -3,6 +3,11 @@ function Race() {
     this.neutral = [];
     this.enemies = [];
 
+    this.origin = {
+        x: 0,
+        y: 0
+    }
+
     this.preferredClimate = {
         temperature: {
             max: 0,
