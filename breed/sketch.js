@@ -1,30 +1,93 @@
-var lens = ['Temperature', 'Food', 'None', 'Population'];
+var lens = ['RaceX', 'RaceX', 'RaceX', 'None'];
+var selR, selG, selB, selA;
 
 var cells = [];
 
 function setup() {
     createCanvas(1024, 602);
-    for(var x = 0; x < 20; x++) {
+    for(var x = 0; x < 40; x++) {
         cells[x] = [];
-        for(var y = 0; y < 15; y++) {
+        for(var y = 0; y < 30; y++) {
             cells[x][y] = new Cell(x, y);
             cells[x][y].init();
         }
     }
-    frameRate(12);
+    frameRate(60);
+
+    selR = createSelect();
+    selR.position(10, 610);
+    selR.option('Population');
+    selR.option('Temperature');
+    selR.option('Moisture');
+    selR.option('Food');
+    selR.option('Water');
+    selR.option('Minerals');
+    selR.option('RaceX');
+    selR.option('RaceY');
+    selR.option('None');
+    selR.changed(()=>{
+        lens[0] = selR.value();
+    });
+
+    selG = createSelect();
+    selG.position(150, 610);
+    selG.option('Population');
+    selG.option('Temperature');
+    selG.option('Moisture');
+    selG.option('Food');
+    selG.option('Water');
+    selG.option('Minerals');
+    selG.option('RaceX');
+    selG.option('RaceY');
+    selG.option('None');
+    selG.changed(()=>{
+        lens[1] = selG.value();
+    });
+
+    selB = createSelect();
+    selB.position(290, 610);
+    selB.option('Population');
+    selB.option('Temperature');
+    selB.option('Moisture');
+    selB.option('Food');
+    selB.option('Water');
+    selB.option('Minerals');
+    selB.option('RaceX');
+    selB.option('RaceY');
+    selB.option('None');
+    selB.changed(()=>{
+        lens[2] = selB.value();
+    });
+
+    selA = createSelect();
+    selA.position(430, 610);
+    selA.option('Population');
+    selA.option('Temperature');
+    selA.option('Moisture');
+    selA.option('Food');
+    selA.option('Water');
+    selA.option('Minerals');
+    selA.option('RaceX');
+    selA.option('RaceY');
+    selA.option('None');
+    selA.changed(()=>{
+        lens[3] = selA.value();
+    });
 }
 
 function draw() {
+    text('Lens: ', 20, 610);
     background(180);
-    for(var x = 0; x < 20; x++) {
-        for(var y = 0; y < 15; y++) {
+    var worldPopulation = 0;
+    noStroke();
+    for(var x = 0; x < 40; x++) {
+        for(var y = 0; y < 30; y++) {
             var f = [];
             for(var i = 0; i < lens.length; i++) {
                 if(lens[i] == 'None') {
                     if(i == 3) {
                         f.push(255);
                     } else {
-                        noStroke();
                         f.push(0);
                     }
                 }
@@ -46,19 +109,39 @@ function draw() {
                 if(lens[i] == 'Minerals') {
                     f.push(cells[x][y].resources.minerals);
                 }
+                if(lens[i] == 'RaceX') {
+                    var xStack = 0;
+                    for(var p of cells[x][y].population) {
+                        xStack += p.race.origin.x + 1;
+                    }
+                    xStack /= (cells[x][y].population.length + 1);
+                    f.push(xStack * 4);
+                }
+                if(lens[i] == 'RaceY') {
+                    var yStack = 0;
+                    for(var p of cells[x][y].population) {
+                        yStack += p.race.origin.y + 1;
+                    }
+                    yStack /= (cells[x][y].population.length + 1);
+                    f.push(yStack * 4);
+                }
             }
             fill(f[0], f[1], f[2], f[3]);     
-            rect(x * 40, y * 40, 40, 40);
+            worldPopulation += cells[x][y].population.length;
+            rect(x * 20, y * 20, 20, 20);
             cells[x][y].update(cells);
         }
     }
 
-    var scaledMouseX = Math.floor(mouseX / 40);
-    var scaledMouseY = Math.floor(mouseY / 40);
+    var scaledMouseX = Math.floor(mouseX / 20);
+    var scaledMouseY = Math.floor(mouseY / 20);
 
-    if(scaledMouseX >= 0 && scaledMouseX < 20 && scaledMouseY >= 0 && scaledMouseY < 15) {
+    fill(255);
+    text('World Population: ' + worldPopulation, 810, 500);
+
+    if(scaledMouseX >= 0 && scaledMouseX < 40 && scaledMouseY >= 0 && scaledMouseY < 30) {
         var currentCell = cells[scaledMouseX][scaledMouseY];
-        fill(255);
+        text('Location: ' + currentCell.x + ', ' + currentCell.y, 810, 10);
         text('Temperature: ' + Math.round(currentCell.climate.temperature), 810, 20);
         text('Moisture: ' + Math.round(currentCell.climate.moisture), 810, 30);
         text('Food (surplus): ' + Math.round(currentCell.resources.food), 810, 40);

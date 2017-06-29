@@ -3,7 +3,7 @@ function Cell(x, y){
     this.y = y;
 
     this.init = function() {
-        this.climate.temperature = -Math.pow(Math.abs(this.y - 7.5), 1.4) + 12.5;
+        this.climate.temperature = -Math.pow(Math.abs(this.y - 15), 1.4) + 25;
         this.climate.moisture = 100 + Math.random() * 412;
 
         this.resources.food = 0;
@@ -63,9 +63,7 @@ function Cell(x, y){
     this.population = [];
     this.bachelors = [];
 
-    this.defenses = [];
-    this.farms = [];
-    this.houses = [];
+    this.farms = 0;
 
     this.racialDistribution = function() {
         var races = [];
@@ -151,6 +149,8 @@ function Cell(x, y){
                     if(person.partner != null) {
                         person.partner.partner = null;
                         this.bachelors.push(person.partner);
+                    } else {
+                        this.bachelors.splice(this.bachelors.indexOf(person), 1);
                     }
                     this.population.splice(this.population.indexOf(person), 1);
                 }
@@ -194,6 +194,27 @@ function Cell(x, y){
         }
         if(this.resources.minerals < 0) {
             this.resources.minerals = 1;
+        }
+        if(this.climate.temperature > 50) {
+            this.climate.temperature = 50;
+        }
+        if(this.climate.temperature < -50) {
+            this.climate.temperature = -50;
+        }
+
+        this.resources.food *= 1 + this.farms / 10;
+        if(this.population.length > 15) {
+            this.farms += 1;
+            for(var x = 0; x < 3; x++) {
+                var person = this.population[x];
+                if(person.partner != null) {
+                    person.partner.partner = null;
+                    this.bachelors.push(person.partner);
+                } else {
+                    this.bachelors.splice(this.bachelors.indexOf(person), 1);
+                }
+                this.population.splice(this.population.indexOf(person), 1);
+            }
         }
     }
 
