@@ -7,4 +7,6 @@ function Faction() {
         green: 255 - this.hostility,
         blue: Math.random() * 200
     };
+    this.productivityUpgradeCost = 10;
+    this.consumptionUpgradeCost = 10;
 }

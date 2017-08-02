@@ -30,7 +30,7 @@ function Cell(x, y, size, gridX, gridY) {
             dispatchEvent(new CustomEvent('hovered', {detail: this}));
         }
         stroke(colour.red * 2, colour.green * 2, colour.blue * 2, alpha);
-        fill(colour.red / 2, colour.green / 2, colour.blue / 2  , this.population);
+        fill(colour.red / 2, colour.green / 2, colour.blue / 2, this.data.foodCap);
         if(this.disabled) {
             stroke(0);
             strokeWeight(2);
