@@ -2,15 +2,42 @@ function DepthFirstCell(x, y) {
     this.x = x;
     this.y = y;
     this.visited = false;
+    this.starting = false;
+    this.backtracked = false;
     this.walls = ['left', 'right', 'up', 'down'];
+
+    this.draw = function(p) {
+        if(this.visited) {
+            p.fill(100, 220, 0);
+            p.ellipse((x * 20 + 10), (y * 20) + 10, 10);
+        }
+        if(this.starting) {
+            p.fill(220, 0, 100);
+            p.ellipse((x * 20) + 10, (y * 20) + 10, 5);
+        }
+        if(this.walls.includes('left')) {
+            p.line((x * 20), (y * 20), (x * 20), (y * 20) + 19);
+        }
+        if(this.walls.includes('right')) {
+            p.line((x * 20) + 19, (y * 20), (x * 20) + 19, (y * 20) + 19);
+        }
+        if(this.walls.includes('up')) {
+            p.line((x * 20), (y * 20), (x * 20) + 19, (y * 20));
+        }
+        if(this.walls.includes('down')) {
+            p.line((x * 20), (y * 20) + 19, (x * 20) + 19, (y * 20) + 19);
+        }
+        if(this.backtracked) {
+            p.fill(220, 100, 0);
+            p.ellipse((x * 20) + 10, (y * 20) + 10, 5);
+        }
+    }
 }
 
-var grid = [];
-var stack = [];
-
 var depthFirstSketch = function(p) {
+    var grid = [];
+    var stack = [];
     var currentCell;
-    var backtracking = false;
     p.setup = function() {
         p.createCanvas(200, 200);
         for(var x = 0; x < 10; x++) {
@@ -23,27 +50,16 @@ var depthFirstSketch = function(p) {
         var startY = randRange(0, grid.length - 1);
         currentCell = grid[startX][startY];
         currentCell.visited = true;
-        p.frameRate(20);
+        currentCell.starting = true;
+        p.frameRate(10);
     }
 
     p.draw = function() {
         p.background(85);
+        var visitedCells = [];
         for(var x = 0; x < grid.length; x++) {
             for(var y = 0; y < grid[x].length; y++) {
-                var cell = grid[x][y];
-                p.stroke(0, 0, 0);
-                if(cell.walls.includes('left')) {
-                    p.line((x * 20), (y * 20), (x * 20), (y * 20) + 19);
-                }
-                if(cell.walls.includes('right')) {
-                    p.line((x * 20) + 19, (y * 20), (x * 20) + 19, (y * 20) + 19);
-                }
-                if(cell.walls.includes('up')) {
-                    p.line((x * 20), (y * 20), (x * 20) + 19, (y * 20));
-                }
-                if(cell.walls.includes('down')) {
-                    p.line((x * 20), (y * 20) + 19, (x * 20) + 19, (y * 20) + 19);
-                }
+                grid[x][y].draw(p);
             }
         }
         
@@ -55,7 +71,7 @@ var depthFirstSketch = function(p) {
                 }
             }
             if(unvisitedNeighbours.length > 0) {
-                var neighbourCell = unvisitedNeighbours[randRange(0, unvisitedNeighbours.length), randRange(0, unvisitedNeighbours.length)];
+                var neighbourCell = unvisitedNeighbours[randRange(0, unvisitedNeighbours.length)];
                 var dx = currentCell.x - neighbourCell.x;
                 var dy = currentCell.y - neighbourCell.y;
                 if(dx == 1) {
@@ -78,19 +94,16 @@ var depthFirstSketch = function(p) {
                 currentCell = neighbourCell;
                 currentCell.visited = true;
             } else {
-                while(currentCell && unvisitedNeighbours.length == 0) {
-                    p.fill(0, 120, 120);
-                    p.rect(currentCell.x * 20, currentCell.y * 20, 20, 20);
+                if(currentCell && unvisitedNeighbours.length == 0) {
                     var unvisitedNeighbours = [];
                     currentCell = stack.pop();
                     if(currentCell) {
+                        currentCell.backtracked = true;
                         for(var neighbour of findNeighboursSquareGrid(grid, currentCell.x, currentCell.y)) {
                             if(!neighbour.visited) {
                                 unvisitedNeighbours.push(neighbour);
                             }
                         }
-                    } else {
-                        break;
                     }
                 }
             }

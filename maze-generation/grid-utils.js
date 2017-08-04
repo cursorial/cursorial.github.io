@@ -16,9 +16,26 @@ function findNeighboursSquareGrid(grid, x, y) {
 }
 
 function findNeighboursHexGrid(grid, x, y) {
-    var neighbours = [];
-    
-    return neighbours;
+    var cell = grid[x][y];
+    if(cell.x % 2 != 0) {
+        return [
+            cell.x > 0 && cell.y > 0 ? grid[cell.x - 1][cell.y - 1] : null, 
+            cell.x > 0 ? grid[cell.x - 1][cell.y] : null,
+            cell.y > 0 ? grid[cell.x][cell.y - 1] : null,
+            cell.y < grid[0].length - 1 ? grid[cell.x][cell.y + 1] : null,
+            cell.x < grid.length - 1 && cell.y > 0 ? grid[cell.x + 1][cell.y - 1] : null,
+            cell.x < grid.length - 1 ? grid[cell.x + 1][cell.y] : null
+        ];
+    } else {
+        return [
+            cell.x > 0 ? grid[cell.x - 1][cell.y] : null,
+            cell.x > 0 && cell.y < grid[0].length - 1 ? grid[cell.x - 1][cell.y + 1] : null,
+            cell.y > 0 ? grid[cell.x][cell.y - 1] : null,
+            cell.y < grid[0].length - 1 ? grid[cell.x][cell.y + 1] : null,
+            cell.x < grid.length - 1 ? grid[cell.x + 1][cell.y] : null,
+            cell.x < grid.length - 1 && cell.y < grid[0].length - 1 ? grid[cell.x + 1][cell.y + 1] : null
+        ];
+    }
 }
 
 function randRange(min, max) {
