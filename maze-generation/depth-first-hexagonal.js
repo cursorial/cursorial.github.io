@@ -71,10 +71,10 @@ var depthFirstHexagonalSketch = function(p) {
     var stack = [];
     var currentCell;
     p.setup = function() {
-        p.createCanvas(200, 200);
-        for(var x = 0; x < 8; x++) {
+        p.createCanvas(490, 520);
+        for(var x = 0; x < 20; x++) {
             grid[x] = [];
-            for(var y = 0; y < 7; y++) {
+            for(var y = 0; y < 20; y++) {
                 grid[x][y] = new DepthFirstHexagonalCell(x, y);
             }
         }
@@ -83,7 +83,6 @@ var depthFirstHexagonalSketch = function(p) {
         currentCell = grid[startX][startY];
         currentCell.starting = true;
         currentCell.visited = true;
-        p.frameRate(12);
     }
 
     p.draw = function() {
@@ -106,9 +105,6 @@ var depthFirstHexagonalSketch = function(p) {
                 var dx = neighbourCell.x - currentCell.x;
                 var dy = neighbourCell.y - currentCell.y;
                 if(currentCell.x % 2 == 0) {
-                    if(dy == -1) {
-                        console.log(currentCell.x, currentCell.y, neighbourCell.x, neighbourCell.y);
-                    }
                     if(dx == 1 && dy == 0) {
                         currentCell.walls.splice(currentCell.walls.indexOf('top-right'), 1);
                         neighbourCell.walls.splice(neighbourCell.walls.indexOf('bottom-left'), 1);
@@ -168,6 +164,8 @@ var depthFirstHexagonalSketch = function(p) {
                     }
                 }
             }
+        } else {
+            p.setup();
         }
     }
 }

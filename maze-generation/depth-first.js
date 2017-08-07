@@ -39,10 +39,10 @@ var depthFirstSketch = function(p) {
     var stack = [];
     var currentCell;
     p.setup = function() {
-        p.createCanvas(200, 200);
-        for(var x = 0; x < 10; x++) {
+        p.createCanvas(400, 400);
+        for(var x = 0; x < 20; x++) {
             grid[x] = [];
-            for(var y = 0; y < 10; y++) {
+            for(var y = 0; y < 20; y++) {
                 grid[x][y] = new DepthFirstCell(x, y);
             }
         }
@@ -51,12 +51,10 @@ var depthFirstSketch = function(p) {
         currentCell = grid[startX][startY];
         currentCell.visited = true;
         currentCell.starting = true;
-        p.frameRate(10);
     }
 
     p.draw = function() {
         p.background(85);
-        var visitedCells = [];
         for(var x = 0; x < grid.length; x++) {
             for(var y = 0; y < grid[x].length; y++) {
                 grid[x][y].draw(p);
@@ -107,6 +105,8 @@ var depthFirstSketch = function(p) {
                     }
                 }
             }
+        } else {
+            p.setup();
         }
     }
 }
