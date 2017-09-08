@@ -1,0 +1,63 @@
+<html>
+    <head>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/three.js/87/three.min.js"></script>
+        <script type="text/javascript" src="OrbitControls.js"></script>
+        <script type="text/javascript" src="ImprovedNoise.js"></script>
+        <script type="text/javascript" src="city-gen.js"></script>
+        <script type="text/javascript" src="sim.js"></script>
+
+        <style>
+            body {
+                margin: 0%;
+                padding: 0%;
+            }
+        </style>
+    </head>
+    <body>
+        <script type="text/javascript">
+            //data generation
+            var cityChunk = generateCityChunk(0, 0);
+
+            //setting up rendering
+            var scene = new THREE.Scene();
+            var camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 1000 );
+            camera.position.x = 4.5;
+            camera.position.y = 10;
+            camera.position.z = 20;
+            camera.rotation.x = -0.5;
+
+            function setupRenderer() {
+                var renderer = new THREE.WebGLRenderer();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+                renderer.setClearColor( 0xeaeaff, 1 );
+                document.body.appendChild(renderer.domElement);
+                return renderer;
+            }
+
+            var renderer = setupRenderer();
+
+            //oribt control setup
+            var controls;
+            controls = new THREE.OrbitControls(camera);
+
+            //adding meshes to scene based on data
+            for(var x = 0; x < cityChunk.grid.length; x++) {
+                for(var y = 0; y < cityChunk.grid[x].length; y++) {
+                    var mesh = cityChunk.grid[x][y].mesh;
+                    scene.add(mesh);
+                }
+            }
+
+            var light = new THREE.HemisphereLight(0xafafaf, 1);
+            scene.add(light);
+
+            function animate() {
+                controls.update();
+                requestAnimationFrame(animate);
+                renderer.render(scene, camera);
+            }
+
+            animate();
+        </script>
+    </body>
+</html>
