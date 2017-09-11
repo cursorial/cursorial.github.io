@@ -1,5 +1,5 @@
-function Building(x, y, width, height, depth) {
-    this.geometry = new THREE.BoxGeometry(width, height, depth);
+function Building(x, y, height) {
+    this.geometry = new THREE.BoxGeometry(1, height, 1);
     this.material = new THREE.MeshLambertMaterial({ color: 0x888888 });
     this.mesh = new THREE.Mesh(this.geometry, this.material);
 
@@ -7,9 +7,9 @@ function Building(x, y, width, height, depth) {
     this.mesh.position.y = height / 2;
     this.mesh.position.z = y;
 
-    this.width = width;
+    this.width = 1;
     this.height = height;
-    this.depth = depth;
+    this.depth = 1;
 }
 
 function Road(x, y) {
@@ -47,7 +47,7 @@ function generateCityChunk(x, y) {
             if(x % 4 == 0 || y % 4 == 0) {
                 cityChunk.grid[x][y] = new Road(x, y);
             } else {
-                Math.random() > 0.5 ? cityChunk.grid[x][y] = new Building(x, y, 1 , Math.ceil(Math.random() * 3), 1) : cityChunk.grid[x][y] = new Grass(x, y);
+                Math.random() > 0.5 ? cityChunk.grid[x][y] = new Building(x, y, Math.ceil(Math.random() * 3)) : cityChunk.grid[x][y] = new Grass(x, y);
             }
         }
     }
