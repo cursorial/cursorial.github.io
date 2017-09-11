@@ -44,7 +44,7 @@ function generateCityChunk(x, y) {
     for(var x = 0; x <= 12; x++) {
         cityChunk.grid[x] = [];
         for(var y = 0; y <= 12; y++) {
-            if(x % 6 == 3 || y % 6 == 3) {
+            if(x % 4 == 0 || y % 4 == 0) {
                 cityChunk.grid[x][y] = new Road(x, y);
             } else {
                 Math.random() > 0.5 ? cityChunk.grid[x][y] = new Building(x, y, 1 , Math.ceil(Math.random() * 3), 1) : cityChunk.grid[x][y] = new Grass(x, y);
