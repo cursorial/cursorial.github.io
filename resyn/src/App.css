@@ -78,13 +78,28 @@ button:active {
 }
 
 .oscillator {
-  color: white;
-  background: black;
   padding: 2%;
   margin: 2%;
 }
 
 input, select, textarea, button {
   font-family: inherit;
-  color: white;
+  font-size: 14px;
+}
+
+.oscillator-setting {
+  padding: 1%;
+  float: left;
+}
+
+.oscillator-setting-element {
+  margin-left: 1%;
+}
+
+.presets-panel {
+  float: left;
+  width: 15%;
+  height: calc(100vh);
+  background: black;
+  margin-top: -1%;
 }
