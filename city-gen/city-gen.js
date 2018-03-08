@@ -41,9 +41,9 @@ function CityChunk(x, y) {
 
 function generateCityChunk(x, y) {
     var cityChunk = new CityChunk(x, y);
-    for(var x = 0; x <= 12; x++) {
+    for(var x = 0; x <= 24; x++) {
         cityChunk.grid[x] = [];
-        for(var y = 0; y <= 12; y++) {
+        for(var y = 0; y <= 24; y++) {
             if(x % 4 == 0 || y % 4 == 0) {
                 cityChunk.grid[x][y] = new Road(x, y);
             } else {
