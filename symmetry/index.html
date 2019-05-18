@@ -12,7 +12,7 @@
     <script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.8.0/p5.min.js'></script>
     <script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.8.0/addons/p5.dom.min.js'></script>
     <script type='text/javascript'>
-      let penSize, pointSplit, showLines, lastPointSplit = 0, mouseInSettings = false
+      let penSize, pointSplit, showLines, lastPointSplit = 0, lastShowLines = true, mouseInSettings = false
 
       function drawPoints (x, y, radius, points, mx, my) {
         let angle = TWO_PI / points;
@@ -35,17 +35,26 @@
         background(0)
       }
 
-      function draw () {
+      function updateSettings () {
         let userPointSplit = parseInt(document.getElementById('pointSplit').value)
         if (lastPointSplit !== userPointSplit) {
           background(0)
         }
         lastPointSplit = userPointSplit
         if (!!userPointSplit) pointSplit = userPointSplit
+        let userPenSize = parseInt(document.getElementById('penSize').value)
+        if (!!userPenSize) penSize = userPenSize
+        fill(color(document.getElementById('penColor').value))
+        showLines = document.getElementById('showLines').checked
+        if (lastShowLines !== showLines) {
+          background(0)
+        }
+        lastShowLines = showLines
+      }
+
+      function draw () {
+        updateSettings()
         if (mouseIsPressed && !mouseInSettings) {
-          let userPenSize = parseInt(document.getElementById('penSize').value)
-          if (!!userPenSize) penSize = userPenSize
-          fill(color(document.getElementById('penColor').value))
           let radius = Math.sqrt(
             Math.pow(Math.abs(mouseX - (width / 2)), 2) +
             Math.pow(Math.abs(mouseY - (height / 2)), 2)
@@ -63,6 +72,11 @@
           }
           noStroke()
         }
+      }
+
+      function validate () {
+        let split = parseInt(document.getElementById('pointSplit').value)
+        if (!!split && split % 2 !== 0) document.getElementById('pointSplit').value = split + 1
       }
 
       function toggleSettings () {
@@ -86,7 +100,7 @@
       <div class='content'>
         <p>Pen Size: <input type='number' id='penSize' value='5'></p>
         <p>Pen Colour: <input type='color' id='penColor' value='#FFFFFF'></p>
-        <p>Split<sup>*</sup>: <input type='number' id='pointSplit' value='4' onkeyup='makeItEven()'></p>
+        <p>Split<sup>*</sup>: <input type='number' id='pointSplit' value='4' onkeyup='validate()'></p>
         <p>Show Lines: <input type='checkbox' id='showLines' checked></input></p>
         <p><small><i>*Must be even</i></small></p>
       </div>
