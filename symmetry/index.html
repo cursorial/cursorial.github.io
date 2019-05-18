@@ -1,0 +1,95 @@
+<html>
+  <head>
+    <title>Symmetry</title>
+    <style>
+      .content {
+        display: none;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+  <body style='margin: 0; padding: 0; font-family: Arial, Helvetica, sans-serif; font-size: 14px;'>
+    <script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.8.0/p5.min.js'></script>
+    <script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.8.0/addons/p5.dom.min.js'></script>
+    <script type='text/javascript'>
+      let penSize, pointSplit, showLines, lastPointSplit = 0, mouseInSettings = false
+
+      function drawPoints (x, y, radius, points, mx, my) {
+        let angle = TWO_PI / points;
+        let ax = x + cos(0) * radius
+        let ay = y + sin(0) * radius
+        let angleOffset = atan2((height / 2) - my, (width / 2) - mx)
+        for (let a = angleOffset; a < TWO_PI + angleOffset; a += angle) {
+          let sx = x + cos(a) * radius;
+          let sy = y + sin(a) * radius;
+          ellipse(sx, sy, penSize, penSize);
+        }
+      }
+
+      function setup () {
+        createCanvas(window.innerWidth, window.innerHeight)
+        noStroke()
+        showLines = true
+        penSize = 5
+        pointSplit = 4
+        background(0)
+      }
+
+      function draw () {
+        let userPointSplit = parseInt(document.getElementById('pointSplit').value)
+        if (lastPointSplit !== userPointSplit) {
+          background(0)
+        }
+        lastPointSplit = userPointSplit
+        if (!!userPointSplit) pointSplit = userPointSplit
+        if (mouseIsPressed && !mouseInSettings) {
+          let userPenSize = parseInt(document.getElementById('penSize').value)
+          if (!!userPenSize) penSize = userPenSize
+          fill(color(document.getElementById('penColor').value))
+          let radius = Math.sqrt(
+            Math.pow(Math.abs(mouseX - (width / 2)), 2) +
+            Math.pow(Math.abs(mouseY - (height / 2)), 2)
+          )
+          drawPoints(width / 2, height / 2, radius, pointSplit, mouseX, mouseY)
+        }
+        if (showLines) {
+          let angle = TWO_PI / pointSplit
+          stroke(255)
+          strokeWeight(1)
+          for (let a = 0; a < TWO_PI; a += angle) {
+            let sx = width / 2 + cos(a) * width;
+            let sy = height / 2 + sin(a) * height;
+            line(sx, sy, width / 2, height / 2)
+          }
+          noStroke()
+        }
+      }
+
+      function toggleSettings () {
+        let collapsible = document.getElementById('collapsible')
+        collapsible.classList.toggle('active');
+        let content = collapsible.nextElementSibling;
+        if (content.style.display === 'block') {
+          collapsible.innerText = 'Show Settings'
+          content.style.display = 'none'
+        } else {
+          collapsible.innerText = 'Hide Settings'
+          content.style.display = 'block'
+        }
+      }
+    </script>
+    <div
+      onmouseover='mouseInSettings = true'
+      onmouseout='mouseInSettings = false'
+      style='position: absolute; top: 0; right: 0; background-color: #555; padding: 10px;'>
+      <button id='collapsible' onclick='toggleSettings()'>Show settings</button>
+      <div class='content'>
+        <p>Pen Size: <input type='number' id='penSize' value='5'></p>
+        <p>Pen Colour: <input type='color' id='penColor' value='#FFFFFF'></p>
+        <p>Split<sup>*</sup>: <input type='number' id='pointSplit' value='4' onkeyup='makeItEven()'></p>
+        <p>Show Lines: <input type='checkbox' id='showLines' checked></input></p>
+        <p><small><i>*Must be even</i></small></p>
+      </div>
+    </div>
+  </body>
+</html>
