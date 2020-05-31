@@ -11,6 +11,9 @@ const Building = (x, y, height) => {
   const light = new THREE.PointLight(0xffffff, 4, 20)
   light.position.set(0, 4, 0)
 
+  mesh.castShadow = true
+  mesh.receiveShadow = true
+
   mesh.position.x = x
   mesh.position.y = height / 2
   mesh.position.z = y

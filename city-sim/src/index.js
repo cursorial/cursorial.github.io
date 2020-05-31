@@ -6,9 +6,7 @@ import * as THREE from 'three'
 import generateCity from './lib/procedural/city-generation'
 import { FOV, ASPECT, NEAR, FAR } from './lib/camera/constants'
 import PointerLockControls from './lib/controls/pointer_lock'
-import Person from './lib/person'
 import Sun from './lib/lighting/sun'
-import { createStreetLight } from './lib/lighting/street_lights'
 import { initInput, handleInput } from './lib/controls/key_handler'
 import { handlePlayerCollision } from './lib/controls/player_collision'
 
@@ -27,14 +25,15 @@ const raycaster = new THREE.Raycaster()
 
 const renderer = new THREE.WebGLRenderer()
 renderer.setSize(window.innerWidth, window.innerHeight)
-renderer.setClearColor(0xEAEAFF, 1)
+renderer.setClearColor('rgb(200, 200, 255)', 1)
+renderer.shadowMap.enabled = true
+renderer.shadowMap.type = THREE.PCFSoftShadowMap
 document.body.appendChild(renderer.domElement)
 
 for (let x = 0; x < cityGrid.length; x++) {
   for (let y = 0; y < cityGrid[x].length; y++) {
     const mesh = cityGrid[x][y].mesh
     currentScene.add(mesh)
-    if (cityGrid[x][y].isLit) createStreetLight(x, y, currentScene)
   }
 }
 
