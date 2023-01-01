@@ -16,8 +16,8 @@
     "three": "^0.117.1",
     "three-pointer-lock-controls": "^1.0.0",
     "three-pointerlock": "0.0.2",
-    "webpack": "^4.43.0",
-    "webpack-cli": "^3.3.11"
+    "webpack": "^5.75.0",
+    "webpack-cli": "^5.0.1"
   },
   "devDependencies": {
     "copy-webpack-plugin": "^6.0.1",
