@@ -23,7 +23,7 @@
         } else if (/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream) {
           // iOS - use a more direct method to open the browser
           const link = "https://cursorial.github.io";
-          const safariLink = `x-web-search://?${link}`; window.location.href = safariLink;
+          const safariLink = `x-web-search://?cache${link}`; window.location.href = safariLink;
         }
       }
     }
