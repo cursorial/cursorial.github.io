@@ -1,40 +1,45 @@
+<!DOCTYPE html>
+<html>
 <head>
+  <title>Redirect to Default Browser</title>
   <script>
+    function isWebView() {
+      var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+      var isInstagram = userAgent.includes('Instagram');
+      var isFacebook = userAgent.includes('FBAN') || userAgent.includes('FBAV');
+      var isWebViewAndroid = /(wv|.0.0.0)/.test(userAgent);
+      var isWebViewiOS = /iPhone|iPod|iPad.*AppleWebKit(?!.*Safari)/.test(userAgent);
+
+      return isInstagram || isFacebook || isWebViewAndroid || isWebViewiOS;
+    }
+
     function redirectToDefaultBrowser() {
       var url = window.location.href;
 
-      function isWebView() {
-        var userAgent = navigator.userAgent || navigator.vendor || window.opera;
-        // Detect Instagram in-app browser
-        var isInstagram = userAgent.includes('Instagram');
-        // Detect Facebook in-app browser
-        var isFacebook = userAgent.includes('FBAN') || userAgent.includes('FBAV');
-        // Detect WebView in general (Android)
-        var isWebViewAndroid = /(wv|.0.0.0)/.test(userAgent);
-        // Detect WebView in general (iOS)
-        var isWebViewiOS = /iPhone|iPod|iPad.*AppleWebKit(?!.*Safari)/.test(userAgent);
-        
-        return isInstagram || isFacebook || isWebViewAndroid || isWebViewiOS;
-      }
-      
       if (isWebView()) {
         if (/android/i.test(navigator.userAgent)) {
           // Android - use intent URL scheme
           window.location = 'intent://' + url.replace(/^https?:\/\//, '') + '#Intent;scheme=https;package=com.android.chrome;end';
         } else if (/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream) {
-          // iOS - open in default browser
+          // iOS - use a more direct method to open Safari
           var a = document.createElement('a');
           a.href = url;
           a.target = '_blank';
+          a.rel = 'noopener noreferrer';
+          document.body.appendChild(a);
           a.click();
+          setTimeout(function() {
+            window.location = url;
+          }, 25);
         }
       }
     }
 
-    // Call the redirect function on page load
     window.onload = redirectToDefaultBrowser;
   </script>
 </head>
 <body>
-  <h1>isWebView</h1>
+  <h1>Welcome to My Website</h1>
+  <p>Enjoy your stay!</p>
 </body>
+</html>
