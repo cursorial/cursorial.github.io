@@ -2,6 +2,20 @@
   <script>
     function redirectToDefaultBrowser() {
       var url = window.location.href;
+
+      function isWebView() {
+        var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+        // Detect Instagram in-app browser
+        var isInstagram = userAgent.includes('Instagram');
+        // Detect Facebook in-app browser
+        var isFacebook = userAgent.includes('FBAN') || userAgent.includes('FBAV');
+        // Detect WebView in general (Android)
+        var isWebViewAndroid = /(wv|.0.0.0)/.test(userAgent);
+        // Detect WebView in general (iOS)
+        var isWebViewiOS = /iPhone|iPod|iPad.*AppleWebKit(?!.*Safari)/.test(userAgent);
+        
+        return isInstagram || isFacebook || isWebViewAndroid || isWebViewiOS;
+      }
       
       if (isWebView()) {
         if (/android/i.test(navigator.userAgent)) {
@@ -18,3 +32,10 @@
     window.onload = redirectToDefaultBrowser;
   </script>
 </head>
+<body>
+  <h1>isWebView</h1>
+  <p id="isWebView"></p>
+  <script>
+    document.getElementById('isWebView').innerText = isWebView();
+  </script>
+</body>
