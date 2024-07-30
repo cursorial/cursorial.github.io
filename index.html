@@ -1,1 +1,20 @@
-Hello
+<head>
+  <script>
+    function redirectToDefaultBrowser() {
+      var url = window.location.href;
+      
+      if (isWebView()) {
+        if (/android/i.test(navigator.userAgent)) {
+          // Android - use intent URL scheme
+          window.location = 'intent://' + url.replace(/^https?:\/\//, '') + '#Intent;scheme=https;package=com.android.chrome;end';
+        } else if (/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream) {
+          // iOS - open in Safari
+          window.location = 'https://google.com/search?q=' + encodeURIComponent(url);
+        }
+      }
+    }
+
+    // Call the redirect function on page load
+    window.onload = redirectToDefaultBrowser;
+  </script>
+</head>
