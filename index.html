@@ -21,16 +21,12 @@
           // Android - use intent URL scheme
           window.location = 'intent://' + url.replace(/^https?:\/\//, '') + '#Intent;scheme=https;package=com.android.chrome;end';
         } else if (/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream) {
-          // iOS - use a more direct method to open Safari
+          // iOS - use a more direct method to open the browser
           var a = document.createElement('a');
-          a.href = url;
-          a.target = '_blank';
-          a.rel = 'noopener noreferrer';
+          a.href = 'about:blank';
+          a.target = '_self';
           document.body.appendChild(a);
           a.click();
-          setTimeout(function() {
-            a.remove();
-          }, 1000);
         }
       }
     }
