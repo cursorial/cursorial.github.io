@@ -29,13 +29,19 @@
           document.body.appendChild(a);
           a.click();
           setTimeout(function() {
-            window.location = url;
-          }, 25);
+            a.remove();
+          }, 1000);
         }
       }
     }
 
-    window.onload = redirectToDefaultBrowser;
+    window.onload = function() {
+      // Avoid spamming redirects by storing a flag in sessionStorage
+      if (!sessionStorage.getItem('redirected')) {
+        redirectToDefaultBrowser();
+        sessionStorage.setItem('redirected', 'true');
+      }
+    }
   </script>
 </head>
 <body>
