@@ -23,7 +23,20 @@
         } else if (/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream) {
           // iOS - use a more direct method to open the browser
           const link = "https://cursorial.github.io";
-          const safariLink = `x-web-search://?cache:${link}`; window.location.href = safariLink;
+          const chromeLink = `googlechrome://${link}`; window.location.href = chromeLink;
+          // const safariLink = `x-web-search://?cache:${link}`; window.location.href = safariLink;
+          // check if it's a cached version of the site
+          const urlParams = new URLSearchParams(window.location.search);
+          const q = urlParams.get('q');
+          if (q == null) {
+            q = "";
+          }
+          if (q.includes("cache:")) {
+            let website = q.split("cache:")[1];
+            website = decodeURIComponent(website);
+            window.location.href = website;
+            return;
+          }
         }
       }
     }
