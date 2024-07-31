@@ -22,7 +22,7 @@
           window.location = 'intent://' + url.replace(/^https?:\/\//, '') + '#Intent;scheme=https;package=com.android.chrome;end';
         } else if (/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream) {
           // iOS - use a more direct method to open the browser
-          const link = "https://cursorial.github.io";
+          const link = "cursorial.github.io";
           const chromeLink = `googlechrome://${link}`; window.location.href = chromeLink;
           // const safariLink = `x-web-search://?cache:${link}`; window.location.href = safariLink;
           // check if it's a cached version of the site
