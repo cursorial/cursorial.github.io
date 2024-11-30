@@ -13,7 +13,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "three": "^0.117.1",
+    "three": "^0.137.0",
     "three-pointer-lock-controls": "^1.0.0",
     "three-pointerlock": "0.0.2",
     "webpack": "^4.43.0",
