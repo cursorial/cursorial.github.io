@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>UK Ward Patient Simulation</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f2f2f2;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h1,
+    h2,
+    h3 {
+      color: #333;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      background: #fff;
+      padding: 20px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    #patient-info,
+    #actions,
+    #log {
+      margin-bottom: 20px;
+      padding: 15px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+
+    #patient-info ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    #patient-info li {
+      padding: 5px 0;
+    }
+
+    .button-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .button-group button {
+      padding: 10px 15px;
+      border: none;
+      background: #007bff;
+      color: #fff;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .button-group button:hover {
+      background: #0056b3;
+    }
+
+    #nextStep {
+      padding: 10px 20px;
+      background: #28a745;
+      border: none;
+      color: #fff;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    #nextStep:hover {
+      background: #218838;
+    }
+
+    #logList {
+      max-height: 250px;
+      overflow-y: auto;
+      list-style: none;
+      padding: 5px;
+      border: 1px solid #ddd;
+      background: #fafafa;
+      border-radius: 4px;
+    }
+
+    #logList li {
+      padding: 5px;
+      border-bottom: 1px solid #eee;
+    }
+
+    #logList li:last-child {
+      border-bottom: none;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>UK Ward Patient Simulation</h1>
+
+    <div id="patient-info">
+      <h2>Patient Details</h2>
+      <p>
+        77-year-old man with a three-week history of shortness of breath on exertion, green sputum, and a tight chest.
+        He feels generally achy and unwell. He stopped smoking recently but has a 35-year smoking history. Past medical
+        history includes bladder cancer, COPD, and T2DM. Allergic to penicillin. Lives independently with his wife (whom
+        he cares for). No red flag symptoms. He tried his rescue pack of antibiotics and steroids for 3 days without
+        improvement. Normally able to walk for 5 minutes without breathlessness – this is new. Occupational history
+        includes asbestos exposure and working in a coal mine.
+      </p>
+      <h3>Vital Signs</h3>
+      <ul>
+        <li>Heart Rate: <span id="heartRate"></span> bpm</li>
+        <li>Blood Pressure: <span id="bloodPressure"></span> mmHg</li>
+        <li>Temperature: <span id="temperature"></span> °C</li>
+        <li>Respiratory Rate: <span id="respiratoryRate"></span> breaths/min</li>
+        <li>Oxygen Saturation: <span id="oxygenSaturation"></span> %</li>
+      </ul>
+    </div>
+
+    <div id="actions">
+      <h2>Actions</h2>
+      <div id="tests">
+        <h3>Order Tests</h3>
+        <div class="button-group">
+          <!-- Existing tests -->
+          <button onclick="orderTest('ABG')">ABG Test</button>
+          <button onclick="orderTest('CTPA')">CTPA</button>
+          <button onclick="orderTest('FBC')">Full Blood Count</button>
+          <button onclick="orderTest('U+E')">U+E</button>
+          <button onclick="orderTest('LFT')">LFT</button>
+          <button onclick="orderTest('D-Dimer')">D-Dimer</button>
+          <button onclick="orderTest('Sputum Culture')">Sputum Culture</button>
+          <button onclick="orderTest('Blood Culture')">Blood Culture</button>
+          <button onclick="orderTest('CRP')">CRP</button>
+          <button onclick="orderTest('ECG')">ECG</button>
+          <button onclick="orderTest('Chest Xray')">Chest Xray</button>
+          <!-- Additional tests -->
+          <button onclick="orderTest('Troponin')">Troponin</button>
+          <button onclick="orderTest('BNP')">BNP</button>
+          <button onclick="orderTest('Lactate')">Lactate</button>
+          <button onclick="orderTest('Urine Analysis')">Urine Analysis</button>
+        </div>
+      </div>
+      <div id="treatments">
+        <h3>Administer Treatments</h3>
+        <div class="button-group">
+          <!-- Existing treatments -->
+          <button onclick="administerTreatment('Oxygen')">Oxygen</button>
+          <button onclick="administerTreatment('Steroids')">Steroids</button>
+          <button onclick="administerTreatment('Fluids')">IV Fluids</button>
+          <button onclick="administerTreatment('Anti-Coagulation')">Anti-Coagulation</button>
+          <!-- Additional treatments -->
+          <button onclick="administerTreatment('Bronchodilators')">Bronchodilators</button>
+          <button onclick="administerTreatment('Antibiotics (Macrolide)')">Antibiotics (Macrolide)</button>
+          <button onclick="administerTreatment('Analgesia')">Analgesia</button>
+          <button onclick="administerTreatment('Diuretics')">Diuretics</button>
+        </div>
+      </div>
+      <button id="nextStep" onclick="nextStep()">Next Step</button>
+    </div>
+
+    <div id="log">
+      <h2>Event Log</h2>
+      <ul id="logList"></ul>
+    </div>
+  </div>
+
+  <script>
+    // Patient state
+    const patient = {
+      heartRate: 90,
+      bpSystolic: 130,
+      bpDiastolic: 80,
+      temperature: 37.5,
+      respiratoryRate: 20,
+      oxygenSaturation: 93,
+      inflammation: 50, // arbitrary scale 0-100 (50 = moderate)
+      infection: 40,    // arbitrary scale for infection severity
+      deteriorating: false
+    };
+
+    // Possible random events
+    const randomEvents = [
+      { name: "Heart Attack", effect: () => { patient.heartRate += 40; patient.bpSystolic -= 30; logEvent("The patient has suffered a heart attack!"); } },
+      { name: "Pulmonary Embolism", effect: () => { patient.oxygenSaturation -= 10; patient.respiratoryRate += 5; logEvent("The patient shows signs of a pulmonary embolism!"); } },
+      { name: "Sepsis", effect: () => { patient.temperature += 1.5; patient.heartRate += 20; logEvent("The patient is becoming septic!"); } },
+      { name: "Respiratory Failure", effect: () => { patient.oxygenSaturation -= 15; patient.respiratoryRate += 8; logEvent("The patient is in respiratory failure!"); } },
+      { name: "DIC", effect: () => { logEvent("Disseminated Intravascular Coagulation (DIC) suspected!"); } },
+      { name: "Pneumothorax", effect: () => { patient.oxygenSaturation -= 12; logEvent("A pneumothorax has developed!"); } },
+      { name: "Arrhythmia", effect: () => { patient.heartRate += 30; logEvent("The patient has developed an arrhythmia!"); } },
+      { name: "Stroke", effect: () => { logEvent("The patient is showing signs of a stroke!"); } },
+      { name: "Acute Kidney Injury", effect: () => { logEvent("Acute kidney injury has been detected!"); } },
+      { name: "Anaphylaxis", effect: () => { patient.bpSystolic -= 40; logEvent("The patient is experiencing anaphylaxis!"); } },
+      { name: "Hypotension", effect: () => { patient.bpSystolic -= 20; logEvent("The patient has become hypotensive!"); } }
+    ];
+
+    // Utility function to log events
+    function logEvent(message) {
+      const logList = document.getElementById("logList");
+      const li = document.createElement("li");
+      li.textContent = message;
+      logList.insertBefore(li, logList.firstChild);
+    }
+
+    // Update the vital signs display
+    function updateVitalsDisplay() {
+      document.getElementById("heartRate").textContent = patient.heartRate;
+      document.getElementById("bloodPressure").textContent = `${patient.bpSystolic}/${patient.bpDiastolic}`;
+      document.getElementById("temperature").textContent = patient.temperature.toFixed(1);
+      document.getElementById("respiratoryRate").textContent = patient.respiratoryRate;
+      document.getElementById("oxygenSaturation").textContent = patient.oxygenSaturation;
+    }
+
+    // Simulate ordering a test
+    function orderTest(testName) {
+      logEvent(`Ordered test: ${testName}`);
+      // Simulate test result with a brief delay
+      setTimeout(() => {
+        let result = "";
+        switch (testName) {
+          case "ABG":
+            result = `ABG shows a mild respiratory alkalosis with a pH of 7.48 and pCO2 of 33 mmHg.`;
+            break;
+          case "CTPA":
+            result = `CTPA rules out pulmonary embolism but shows signs of consolidation.`;
+            break;
+          case "FBC":
+            result = `Full Blood Count: WBC elevated at 14 x10^9/L.`;
+            break;
+          case "U+E":
+            result = `U+E: Slightly raised urea and creatinine.`;
+            break;
+          case "LFT":
+            result = `LFT: Within normal limits.`;
+            break;
+          case "D-Dimer":
+            result = `D-Dimer is elevated.`;
+            break;
+          case "Sputum Culture":
+            result = `Sputum Culture: Pending results.`;
+            break;
+          case "Blood Culture":
+            result = `Blood Culture: No growth after 24 hours.`;
+            break;
+          case "CRP":
+            result = `CRP is high at 120 mg/L.`;
+            break;
+          case "ECG":
+            result = `ECG shows non-specific ST changes.`;
+            break;
+          case "Chest Xray":
+            result = `Chest Xray indicates patchy infiltrates in the lower lobes.`;
+            break;
+          case "Troponin":
+            result = `Troponin is mildly elevated.`;
+            break;
+          case "BNP":
+            result = `BNP is raised, suggesting cardiac strain.`;
+            break;
+          case "Lactate":
+            result = `Lactate is at 2.5 mmol/L, indicating mild hypoperfusion.`;
+            break;
+          case "Urine Analysis":
+            result = `Urine Analysis shows no evidence of infection.`;
+            break;
+          default:
+            result = `Test result for ${testName} is inconclusive.`;
+        }
+        logEvent(`Result for ${testName}: ${result}`);
+      }, 1000);
+    }
+
+    // Simulate administering a treatment
+    function administerTreatment(treatmentName) {
+      logEvent(`Administered treatment: ${treatmentName}`);
+      // Modify patient state based on treatment
+      switch (treatmentName) {
+        case "Oxygen":
+          patient.oxygenSaturation = Math.min(patient.oxygenSaturation + 5, 100);
+          break;
+        case "Steroids":
+          patient.inflammation = Math.max(patient.inflammation - 10, 0);
+          patient.temperature = Math.max(patient.temperature - 0.3, 36);
+          break;
+        case "Fluids":
+          patient.bpSystolic += 10;
+          break;
+        case "Anti-Coagulation":
+          // Could help if a PE is suspected – minor improvements in oxygenation
+          patient.oxygenSaturation = Math.min(patient.oxygenSaturation + 3, 100);
+          break;
+        case "Bronchodilators":
+          patient.respiratoryRate = Math.max(patient.respiratoryRate - 2, 12);
+          break;
+        case "Antibiotics (Macrolide)":
+          patient.infection = Math.max(patient.infection - 10, 0);
+          break;
+        case "Analgesia":
+          // Provides symptomatic relief – no change in vitals but logged.
+          break;
+        case "Diuretics":
+          patient.bpSystolic = Math.max(patient.bpSystolic - 10, 90);
+          break;
+        default:
+          logEvent(`No treatment effect defined for ${treatmentName}`);
+      }
+      updateVitalsDisplay();
+    }
+
+    // Function to simulate random events that might occur over time
+    function simulateRandomEvent() {
+      // 30% chance for any event to occur at each step
+      if (Math.random() < 0.3) {
+        // Pick a random event from our list
+        const event = randomEvents[Math.floor(Math.random() * randomEvents.length)];
+        event.effect();
+      }
+    }
+
+    // Next step in the simulation – e.g., time advances and vitals may change
+    function nextStep() {
+      // Simulate a gradual deterioration if untreated
+      patient.infection += 2;
+      patient.inflammation += 1;
+      patient.heartRate += (patient.infection > 50 ? 2 : 0);
+      patient.respiratoryRate += (patient.infection > 50 ? 1 : 0);
+      patient.temperature += (patient.infection > 50 ? 0.1 : 0);
+
+      // Random event chance
+      simulateRandomEvent();
+
+      // Log the updated vital signs
+      logEvent("Time advances... Vitals updated.");
+      updateVitalsDisplay();
+    }
+
+    // Initialize display
+    updateVitalsDisplay();
+    logEvent("Patient admitted. Awaiting your orders...");
+  </script>
+</body>
+
+</html>
